@@ -20,7 +20,7 @@ Then open the URL it prints (usually `http://localhost:5173`).
 ## What's actually in the game
 
 - **13 themed worlds**, each with its own boss, following the precalculus → calculus curriculum: Foundation Forge (algebra), Polynomial Peaks, Rational Function Rift, Exponential Empire, Trigonometric Kingdom, Trig Graph Galaxy, Identity Citadel, Triangle Expedition, Polar Orbit & Vector Valley, Conic Constellation, Matrix Fortress, Sequence Summit, and the Calculus Gateway.
-- **441 hand-written, verified problems** across those worlds — every numeric/algebraic answer was checked by an independent script (not just "does it match itself") before shipping. Run `npm run verify` to see for yourself.
+- **441 hand-written problems** across those worlds. `npm run verify` checks internal self-consistency (every stored answer parses and validates); `npm run verify:independent` cross-checks answers against the problem's own prompt/worked solution instead of against themselves, and a manual mathematical re-derivation of a large sample (covering every topic area and answer type) is recorded in [QA_REPORT.md](./QA_REPORT.md) — including the one real bug that process found and fixed.
 - **A real answer checker**, not string matching: built on [mathjs](https://mathjs.org/), it accepts anything mathematically equivalent — `3x+10` or `10+3x`, `sqrt(5)` or `\sqrt{5}` (LaTeX input works), `1/2` or `0.5`, `(4,infinity)` or unions of intervals, vectors as `3+4i`, two-variable difference quotients, etc.
 - **A real learning loop**, not just quiz-and-grade: Discover → Watch → Solve, with Hint / Explain the Rule / Break It Down / Show a Similar Example / I'm Lost on every problem, and a full worked solution after repeated misses.
 - **Two genuinely interactive labs**: a drag-to-explore **Unit Circle Explorer** (with a quiz mode that hides values) and an **Identity Locks** step-by-step trig-identity proof builder — not "true/false", an actual multi-step transformation ladder.
@@ -33,16 +33,29 @@ This is the **first two build milestones** of a much larger spec (see `MASTER_PR
 ## Scripts
 
 ```bash
-npm run dev           # start the dev server
-npm run build          # production build (dist/)
-npm run build:single   # single self-contained HTML file (dist-single/index.html)
-npm run verify          # run the full answer-checker regression suite (441 problems + reject tests + LaTeX input tests)
-npm run lint            # oxlint
+npm run dev                # start the dev server
+npm run build               # production build (dist/)
+npm run build:single        # single self-contained HTML file (dist-single/index.html)
+npm run typecheck           # tsc -b --noEmit
+npm run lint                 # oxlint
+npm run verify                # 441 problems + reject tests + LaTeX input tests (self-consistency)
+npm run verify:independent     # independent re-verification — cross-checks answers against the
+                                # prompt/worked solution, NOT against themselves
+npm test                      # unit tests (Vitest) — math-equivalence logic + game-state reducers
+npm run test:coverage           # unit tests with coverage
+npm run test:e2e                 # Playwright E2E + accessibility + adversarial-behavior tests
+                                  # (builds + runs against the production bundle, real Chromium/
+                                  # Firefox/WebKit engines — see TESTING.md for exact scope)
 ```
+
+See [TESTING.md](./TESTING.md) for what each suite actually covers and how to read the results,
+[SECURITY.md](./SECURITY.md) for the threat model and how to report a vulnerability,
+[PRIVACY.md](./PRIVACY.md) for exactly what's stored and how to delete/export it, and
+[CHANGELOG.md](./CHANGELOG.md) for what changed and when.
 
 ## Tech
 
-React 19 + TypeScript + Vite, Zustand for state (persisted to `localStorage`), Tailwind CSS v4, KaTeX for math typesetting, mathjs for answer grading. No backend — everything runs client-side.
+React 19 + TypeScript + Vite, Zustand for state (persisted to `localStorage`), Tailwind CSS v4, KaTeX for math typesetting, mathjs for answer grading. No backend — everything runs client-side, nothing is sent anywhere.
 
 ## Project structure
 
@@ -52,7 +65,8 @@ src/
   data/
     problems/     # one file per world — the actual problem banks
     topics.ts, worlds.ts, bosses.ts, formulas.ts, board.ts
-  lib/            # grade.ts (dispatch) + mathCheck.ts (the actual math-equivalence logic)
-  store/          # zustand game state
-scripts/          # verifyProblems.ts, verifyRejects.ts, verifyLatexInput.ts
+  lib/            # grade.ts (dispatch) + mathCheck.ts (the hardened math-equivalence logic)
+  store/          # zustand game state (schema-versioned, validated on load — see TESTING.md)
+scripts/          # verifyProblems.ts, verifyRejects.ts, verifyLatexInput.ts, independentVerify.ts
+e2e/              # Playwright: full user journeys, adversarial behavior, accessibility, performance
 ```
