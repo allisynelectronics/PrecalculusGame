@@ -93,7 +93,7 @@ export function Compendium() {
         </div>
       </div>
 
-      <div className="hidden sm:flex fixed right-1 top-1/2 -translate-y-1/2 flex-col items-center gap-[2px] z-30 bg-black/30 rounded-full py-2 px-1">
+      <div className="hidden sm:flex fixed right-1 top-1/2 -translate-y-1/2 max-h-[90vh] overflow-y-auto flex-col items-center z-30 bg-black/30 rounded-full py-2 px-1">
         {railLetters.map((letter) => {
           const active = availableLetters.has(letter);
           return (
@@ -101,7 +101,9 @@ export function Compendium() {
               key={letter}
               onClick={() => active && jumpTo(letter)}
               disabled={!active}
-              className={`text-[9px] leading-none w-4 h-4 flex items-center justify-center rounded-full transition-colors ${
+              // w-6 h-6 (24x24px) meets WCAG 2.2 SC 2.5.8 Target Size (Minimum) — the
+              // clickable box, not just the visible glyph, must be at least 24x24px.
+              className={`text-[9px] leading-none w-6 h-6 flex items-center justify-center rounded-full transition-colors shrink-0 ${
                 active
                   ? 'text-purple-200 hover:text-amber-200 hover:bg-purple-500/30 cursor-pointer'
                   : 'text-purple-800 cursor-default'
