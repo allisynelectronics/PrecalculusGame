@@ -91,12 +91,14 @@ export function IdentityProofBuilder({
                 if (e.key === 'Enter') handleSubmit();
               }}
               placeholder="Type the next line of the proof"
-              className="flex-1 px-4 py-2 rounded-lg bg-black/40 border border-purple-400/40 text-purple-100 focus:outline-none focus:border-amber-400"
+              disabled={showAnswer}
+              className="flex-1 px-4 py-2 rounded-lg bg-black/40 border border-purple-400/40 text-purple-100 focus:outline-none focus:border-amber-400 disabled:opacity-50"
               autoFocus
             />
             <button
               onClick={handleSubmit}
-              className="px-6 py-2 rounded-full bg-gradient-to-r from-amber-500 to-fuchsia-500 text-black font-bold"
+              disabled={showAnswer}
+              className="px-6 py-2 rounded-full bg-gradient-to-r from-amber-500 to-fuchsia-500 text-black font-bold disabled:opacity-40"
             >
               Submit
             </button>

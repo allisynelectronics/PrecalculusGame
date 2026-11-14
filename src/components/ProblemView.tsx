@@ -174,7 +174,7 @@ export function ProblemView() {
 
             {status === 'wrong' && !showFullSolution && (
               <div className="mt-3 p-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-sm text-rose-200 animate-shake">
-                Not quite. <MathText text={problem.hints[Math.min(hintsShown, problem.hints.length - 1)]} />
+                Not quite. <MathText text={problem.hints[Math.min(hintsShown, problem.hints.length - 1)] ?? 'Try breaking the problem into smaller steps.'} />
               </div>
             )}
 

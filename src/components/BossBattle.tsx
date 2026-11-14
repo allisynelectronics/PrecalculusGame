@@ -177,7 +177,7 @@ export function BossBattle() {
               <AnswerInput key={problem.id} problem={problem} onSubmit={handleSubmit} />
               {status === 'wrong' && (
                 <div className="mt-3 p-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-sm text-rose-200 animate-shake">
-                  The boss strikes back! <MathText text={problem.hints[0]} />
+                  The boss strikes back! <MathText text={problem.hints[0] ?? 'Try again.'} />
                 </div>
               )}
               <button
@@ -188,7 +188,7 @@ export function BossBattle() {
               </button>
               {hintShown && (
                 <div className="mt-2 text-xs text-cyan-200">
-                  <MathText text={problem.hints[problem.hints.length - 1]} />
+                  <MathText text={problem.hints[problem.hints.length - 1] ?? 'No further hint available.'} />
                 </div>
               )}
             </>

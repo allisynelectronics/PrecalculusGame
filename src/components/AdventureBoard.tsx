@@ -81,8 +81,12 @@ export function AdventureBoard() {
       const target = Math.min(boardPosition + roll, lastIndex);
       const spaces = target - boardPosition;
       movePlayer(spaces);
-      setRolling(false);
-      setTimeout(() => resolveSpace(board[target]), 300);
+      // Keep the Roll button disabled until the space actually resolves, so a quick
+      // double-click can't queue a second roll while this one's landing is still pending.
+      setTimeout(() => {
+        setRolling(false);
+        resolveSpace(board[target]);
+      }, 300);
     }, 650);
   };
 

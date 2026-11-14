@@ -81,7 +81,6 @@ export interface World {
   accent: string;
   locked: boolean; // true = under development, shown greyed on map
   partial?: boolean; // true = playable but curriculum not yet complete
-  topicIds: string[];
 }
 
 export type SpaceType =
