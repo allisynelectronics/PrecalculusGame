@@ -24,6 +24,7 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   handleResetProgress = () => {
+    if (!confirm('Reset all saved progress? This cannot be undone.')) return;
     try {
       localStorage.removeItem('mathverse-save');
     } catch {

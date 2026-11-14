@@ -6,6 +6,7 @@ import { Dashboard } from './components/Dashboard';
 import { Diagnostic } from './components/Diagnostic';
 import { HUD } from './components/HUD';
 import { ProblemView } from './components/ProblemView';
+import { SaveRecoveryBanner } from './components/SaveRecoveryBanner';
 import { TitleScreen } from './components/TitleScreen';
 import { UnitCircleExplorer } from './components/UnitCircleExplorer';
 import { WorldMap } from './components/WorldMap';
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <>
+      <SaveRecoveryBanner />
       {screen !== 'title' && <HUD />}
       {screen === 'title' && <TitleScreen />}
       {screen === 'character' && <CharacterCreation />}

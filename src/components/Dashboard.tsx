@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import { BOSSES } from '../data/bosses';
 import { TOPICS } from '../data/topics';
 import { WORLDS } from '../data/worlds';
@@ -13,9 +14,11 @@ const MASTERY_COLOR: Record<number, string> = {
 };
 
 export function Dashboard() {
-  const { character, level, xp, coins, stars, mastery, attempts, defeatedBosses, unlockedWorldIds } =
+  const { character, level, xp, coins, stars, mastery, attempts, defeatedBosses, unlockedWorldIds, exportSave, importSave } =
     useGameStore();
   const { independent, withHint } = getOverallAccuracy(attempts);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importMessage, setImportMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
 
   const activeWorlds = WORLDS.filter((w) => !w.locked && unlockedWorldIds.includes(w.id));
   const allActiveTopics = TOPICS.filter((t) => activeWorlds.some((w) => w.id === t.worldId));
@@ -23,13 +26,70 @@ export function Dashboard() {
   const calculusReadiness =
     allActiveTopics.length === 0 ? 0 : Math.round((masteredCount / allActiveTopics.length) * 100);
 
+  const handleExport = () => {
+    const json = exportSave();
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const datestamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `mathverse-save-${datestamp}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportFile = async (file: File) => {
+    const text = await file.text();
+    const result = importSave(text);
+    if (result.ok) {
+      setImportMessage({ kind: 'ok', text: 'Progress imported — reloading...' });
+      setTimeout(() => window.location.reload(), 900);
+    } else {
+      setImportMessage({ kind: 'error', text: result.error });
+    }
+  };
+
   return (
     <div className="min-h-screen pt-20 pb-10 px-6 bg-gradient-to-b from-[#0b0a14] to-[#1a1033]">
       <div className="max-w-3xl mx-auto">
         <h1 className="font-display text-3xl text-amber-200 mb-1 text-center">
           {character?.name ?? 'Hero'}'s Dashboard
         </h1>
-        <p className="text-purple-300 text-center mb-6">Track your journey toward Calculus readiness.</p>
+        <p className="text-purple-300 text-center mb-4">Track your journey toward Calculus readiness.</p>
+
+        <div className="flex items-center justify-center gap-3 mb-6 text-sm">
+          <button
+            onClick={handleExport}
+            className="px-4 py-1.5 rounded-full border border-cyan-400/40 text-cyan-200 hover:bg-cyan-500/20"
+          >
+            ⬇️ Export Progress
+          </button>
+          <button
+            onClick={() => {
+              setImportMessage(null);
+              fileInputRef.current?.click();
+            }}
+            className="px-4 py-1.5 rounded-full border border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/20"
+          >
+            ⬆️ Import Progress
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) void handleImportFile(file);
+              e.target.value = '';
+            }}
+          />
+        </div>
+        {importMessage && (
+          <p className={`text-center text-sm mb-4 ${importMessage.kind === 'ok' ? 'text-emerald-300' : 'text-rose-300'}`}>
+            {importMessage.text}
+          </p>
+        )}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           <StatCard label="Level" value={level} />
