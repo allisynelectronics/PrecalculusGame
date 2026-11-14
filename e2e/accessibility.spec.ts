@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { createCharacterAndReachWorldMap, pinRandom } from './helpers';
+import { createCharacterAndReachWorldMap, gotoScreen, pinRandom } from './helpers';
 
 /**
  * Automated WCAG 2.2 AA accessibility audit via axe-core. This catches a real, well-
@@ -77,6 +77,36 @@ test.describe('accessibility (axe-core, WCAG 2.2 AA tags)', () => {
     await page.getByRole('button', { name: /I understand/ }).click();
     await rollButton.click();
     await expect(page.getByRole('button', { name: "I'm ready to try one myself" })).toBeVisible({ timeout: 5000 });
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
+
+  test('unit circle explorer', async ({ page }) => {
+    await gotoScreen(page, 'unitcircle', 'trig-kingdom');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
+
+  test('trig wave visualizer', async ({ page }) => {
+    await gotoScreen(page, 'trigwave', 'wave-galaxy');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
+
+  test('oblique triangle solver', async ({ page }) => {
+    await gotoScreen(page, 'obliquetriangle', 'triangle-expedition');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
+
+  test('vector simulator', async ({ page }) => {
+    await gotoScreen(page, 'vectorlab', 'polar-vector-valley');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
+
+  test('polar grapher', async ({ page }) => {
+    await gotoScreen(page, 'polargrapher', 'polar-vector-valley');
     const results = await runAxe(page);
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
   });

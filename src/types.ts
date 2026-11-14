@@ -131,7 +131,11 @@ export type Screen =
   | 'boss'
   | 'dashboard'
   | 'compendium'
-  | 'unitcircle';
+  | 'unitcircle'
+  | 'trigwave'
+  | 'obliquetriangle'
+  | 'vectorlab'
+  | 'polargrapher';
 
 export interface AttemptRecord {
   problemId: string;

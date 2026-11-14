@@ -5,10 +5,14 @@ import { Compendium } from './components/Compendium';
 import { Dashboard } from './components/Dashboard';
 import { Diagnostic } from './components/Diagnostic';
 import { HUD } from './components/HUD';
+import { ObliqueTriangleSolver } from './components/ObliqueTriangleSolver';
+import { PolarGrapher } from './components/PolarGrapher';
 import { ProblemView } from './components/ProblemView';
 import { SaveRecoveryBanner } from './components/SaveRecoveryBanner';
 import { TitleScreen } from './components/TitleScreen';
+import { TrigWaveVisualizer } from './components/TrigWaveVisualizer';
 import { UnitCircleExplorer } from './components/UnitCircleExplorer';
+import { VectorSimulator } from './components/VectorSimulator';
 import { WorldMap } from './components/WorldMap';
 import { useGameStore } from './store/gameStore';
 
@@ -29,6 +33,10 @@ function App() {
       {screen === 'dashboard' && <Dashboard />}
       {screen === 'compendium' && <Compendium />}
       {screen === 'unitcircle' && <UnitCircleExplorer />}
+      {screen === 'trigwave' && <TrigWaveVisualizer />}
+      {screen === 'obliquetriangle' && <ObliqueTriangleSolver />}
+      {screen === 'vectorlab' && <VectorSimulator />}
+      {screen === 'polargrapher' && <PolarGrapher />}
     </>
   );
 }

@@ -4,8 +4,19 @@ import { getProblemsByTopic } from '../data/problems';
 import { getTopic } from '../data/topics';
 import { WORLDS } from '../data/worlds';
 import { useGameStore } from '../store/gameStore';
-import type { BoardSpace, SpaceType } from '../types';
+import type { BoardSpace, Screen, SpaceType } from '../types';
 import { MathText } from './Math';
+
+// Interactive labs, keyed by the world whose board should offer a shortcut to them.
+const WORLD_LABS: Partial<Record<string, { screen: Screen; icon: string; label: string }[]>> = {
+  'trig-kingdom': [{ screen: 'unitcircle', icon: '🔵', label: 'Unit Circle Lab' }],
+  'wave-galaxy': [{ screen: 'trigwave', icon: '🌊', label: 'Wave Visualizer' }],
+  'triangle-expedition': [{ screen: 'obliquetriangle', icon: '📐', label: 'Triangle Solver' }],
+  'polar-vector-valley': [
+    { screen: 'vectorlab', icon: '➡️', label: 'Vector Lab' },
+    { screen: 'polargrapher', icon: '🌀', label: 'Polar Grapher' },
+  ],
+};
 
 const SPACE_ICON: Record<SpaceType, string> = {
   start: '🚪',
@@ -118,14 +129,15 @@ export function AdventureBoard() {
         <div className="flex items-center justify-between mb-4 gap-2">
           <h1 className="font-display text-2xl text-amber-200">{world.name}</h1>
           <div className="flex items-center gap-2">
-            {currentWorldId === 'trig-kingdom' && (
+            {(WORLD_LABS[currentWorldId] ?? []).map((lab) => (
               <button
-                onClick={() => setScreen('unitcircle')}
+                key={lab.screen}
+                onClick={() => setScreen(lab.screen)}
                 className="px-4 py-2 rounded-full border border-cyan-400/50 text-cyan-200 hover:bg-cyan-500/20 text-sm font-semibold"
               >
-                🔵 Unit Circle Lab
+                {lab.icon} {lab.label}
               </button>
-            )}
+            ))}
             <button
               onClick={handleRoll}
               disabled={rolling || clampedPos >= lastIndex}

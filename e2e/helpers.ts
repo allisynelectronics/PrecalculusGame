@@ -37,3 +37,31 @@ export async function pinRandom(page: Page, value = 0) {
     Math.random = () => v;
   }, value);
 }
+
+/** Seeds a minimal valid save directly in localStorage and navigates straight to the
+ *  given screen — for screens (like the interactive labs) that don't need the full
+ *  character-creation/diagnostic walkthrough to reach, and whose own UI is what's
+ *  actually under test. */
+export async function gotoScreen(page: Page, screen: string, currentWorldId = 'foundation-forge') {
+  await page.goto('/');
+  await page.evaluate(
+    ({ screen, currentWorldId }) => {
+      localStorage.setItem(
+        'mathverse-save',
+        JSON.stringify({
+          state: {
+            screen, character: { name: 'Astra', avatar: '🧙‍♀️', colorClass: 'x' },
+            xp: 0, coins: 0, stars: 0, level: 1, currentWorldId,
+            boardPositions: {}, diagnosticDone: true, seenTopics: [], mastery: {}, attempts: [],
+            unlockedWorldIds: ['foundation-forge', 'polynomial-peaks', 'rational-rift', 'exponential-empire', 'trig-kingdom', 'wave-galaxy', 'identity-citadel', 'triangle-expedition', 'polar-vector-valley'],
+            defeatedBosses: [], activeProblemId: null, activeSpaceIndex: null,
+            pendingTopicId: null, pendingSpaceType: null, returnScreen: 'board', lastReward: null,
+          },
+          version: 1,
+        }),
+      );
+    },
+    { screen, currentWorldId },
+  );
+  await page.reload();
+}
