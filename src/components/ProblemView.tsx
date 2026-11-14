@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { getEquationRepairs, getProblemsByTopic, getRandomProblem } from '../data/problems';
 import { getTopic } from '../data/topics';
 import { gradeAnswer } from '../lib/grade';
@@ -63,6 +63,11 @@ export function ProblemView() {
   const [showSimilar, setShowSimilar] = useState(false);
   const [showFullSolution, setShowFullSolution] = useState(false);
 
+  // Guards against a rapid double-submit granting the reward twice for one correct
+  // answer — 'correct' only hides the input once React re-renders, which isn't
+  // synchronous with the click, so a ref closes the gap in between.
+  const submittedRef = useRef(false);
+
   const similarExample = useMemo(() => {
     const pool = getProblemsByTopic(topicId).filter((p) => p.id !== problem.id && p.worked);
     if (pool.length === 0) return undefined;
@@ -80,6 +85,8 @@ export function ProblemView() {
   };
 
   const handleIdentitySolved = () => {
+    if (submittedRef.current) return;
+    submittedRef.current = true;
     recordAttempt({
       problemId: problem.id,
       topicId: problem.topicId,
@@ -94,6 +101,8 @@ export function ProblemView() {
   };
 
   const handleSubmit = (value: string) => {
+    if (submittedRef.current) return;
+    submittedRef.current = true;
     const correct = gradeAnswer(problem, value);
     const nextAttemptCount = attemptCount + 1;
     setAttemptCount(nextAttemptCount);
@@ -112,6 +121,7 @@ export function ProblemView() {
       grantReward(r.xp, r.coins, r.stars);
       if (spaceType === 'portal') movePlayer(3);
     } else {
+      submittedRef.current = false; // let the player retry right away
       setStatus('wrong');
       if (nextAttemptCount >= 3) setShowFullSolution(true);
     }

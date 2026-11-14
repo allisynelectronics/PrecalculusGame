@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { getBossForWorld } from '../data/bosses';
 import { getRandomProblem } from '../data/problems';
 import { WORLDS } from '../data/worlds';
@@ -46,13 +46,21 @@ export function BossBattle() {
 
   const [problem, setProblem] = useState<Problem>(() => rollProblem(0, []));
 
+  // Guards against a rapid double-submit (double-click/double-Enter) granting rewards
+  // twice for one correct answer — status becoming 'correct' only blocks re-submission
+  // once React has re-rendered, which isn't synchronous, so a ref is checked first.
+  const submittedRef = useRef(false);
+
   const nextQuestion = (pIdx: number, exclude: string[]) => {
     setProblem(rollProblem(pIdx, exclude));
     setStatus('idle');
     setHintShown(false);
+    submittedRef.current = false;
   };
 
   const handleSubmit = (value: string) => {
+    if (submittedRef.current) return;
+    submittedRef.current = true;
     const correct = gradeAnswer(problem, value);
     recordAttempt({ problemId: problem.id, topicId: problem.topicId, correct, usedHint: hintShown, timestamp: Date.now() });
 
@@ -83,6 +91,7 @@ export function BossBattle() {
         }
       }, 1100);
     } else {
+      submittedRef.current = false; // let the player retry right away
       setStatus('wrong');
       setHeroHearts((h) => Math.max(0, h - 1));
     }

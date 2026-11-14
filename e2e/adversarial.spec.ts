@@ -26,6 +26,35 @@ test.describe('adversarial / unusual player behavior', () => {
     await expect(page.getByText(/Space \d+ of \d+/)).toContainText('Space 2 of');
   });
 
+  test('rapid double-click on a shrine reward does not grant it twice', async ({ page }) => {
+    await pinRandom(page, 0);
+    await createCharacterAndReachWorldMap(page);
+    await page.getByRole('button', { name: /Foundation Forge/i }).first().click();
+
+    // Board pattern: index1 is always a shrine space.
+    await page.getByRole('button', { name: /🎲/ }).click();
+    const continueButton = page.getByRole('button', { name: /I understand/ });
+    await expect(continueButton).toBeVisible({ timeout: 3000 });
+
+    // Dispatch two click events back-to-back inside a single page-context script, with
+    // no round trip back to Playwright in between — this is much closer to a genuine
+    // near-simultaneous double-click than two separate awaited .click() calls, which
+    // each give React a full IPC round trip's worth of time to re-render in between.
+    await continueButton.evaluate((el) => {
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    await page.getByText('📊 Dashboard').click();
+    // Exactly one shrine reward (+5 XP, +1 star) must have landed, not two or three —
+    // each StatCard's label sits in its own div, with the value in a sibling div, so
+    // walk from the label up to the shared parent and assert on that.
+    const xpCard = page.getByText('XP', { exact: true }).locator('xpath=..');
+    await expect(xpCard).toContainText('5');
+    const starCard = page.getByText('Stars', { exact: true }).locator('xpath=..');
+    await expect(starCard).toContainText('⭐ 1');
+  });
+
   test('refreshing mid-session preserves character and progress via localStorage', async ({ page }) => {
     await createCharacterAndReachWorldMap(page);
     const nameBefore = await page.locator('.font-semibold.text-purple-200').first().innerText();

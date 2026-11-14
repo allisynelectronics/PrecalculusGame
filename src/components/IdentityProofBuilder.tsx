@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { checkExpressionEquivalence } from '../lib/mathCheck';
 import type { Problem } from '../types';
 import { MathText } from './Math';
@@ -24,8 +24,18 @@ export function IdentityProofBuilder({
 
   const stage = stages[stageIndex];
 
+  // Guards against a rapid double-submit skipping two stages at once, or — on the
+  // final stage — calling onSolved() (and thus granting the reward) twice. Reset once
+  // the component has actually re-rendered onto the next stage, not synchronously,
+  // so it keeps blocking a second click dispatched before that render lands.
+  const processingRef = useRef(false);
+  useEffect(() => {
+    processingRef.current = false;
+  }, [stageIndex]);
+
   const handleSubmit = () => {
-    if (!value.trim()) return;
+    if (!value.trim() || processingRef.current) return;
+    processingRef.current = true;
     const correct = checkExpressionEquivalence(value, stage.targetExpr, 'x');
     if (correct) {
       const nextLines = [...lines, stage.targetDisplay];
@@ -42,6 +52,7 @@ export function IdentityProofBuilder({
         setStageIndex((i) => i + 1);
       }
     } else {
+      processingRef.current = false; // let the player retry right away
       setWrong(true);
       const next = attemptCount + 1;
       setAttemptCount(next);
@@ -50,6 +61,8 @@ export function IdentityProofBuilder({
   };
 
   const skipStage = () => {
+    if (processingRef.current) return;
+    processingRef.current = true;
     const nextLines = [...lines, stage.targetDisplay];
     setLines(nextLines);
     setValue('');

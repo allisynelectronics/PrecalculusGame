@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { buildBoardForWorld } from '../data/board';
 import { getProblemsByTopic } from '../data/problems';
 import { getTopic } from '../data/topics';
@@ -46,6 +46,9 @@ export function AdventureBoard() {
   const [rollValue, setRollValue] = useState<number | null>(null);
   const [modal, setModal] = useState<{ kind: 'shrine' | 'mystery'; space: BoardSpace } | null>(null);
   const [mysteryResult, setMysteryResult] = useState<string | null>(null);
+  // Guards a shrine/mystery modal's reward-granting action against a rapid double-click
+  // firing it twice before the modal actually closes — reset whenever a new modal opens.
+  const modalResolvedRef = useRef(false);
 
   const world = WORLDS.find((w) => w.id === currentWorldId)!;
   const board = useMemo(() => buildBoardForWorld(currentWorldId), [currentWorldId]);
@@ -60,10 +63,12 @@ export function AdventureBoard() {
       return;
     }
     if (space.type === 'shrine') {
+      modalResolvedRef.current = false;
       setModal({ kind: 'shrine', space });
       return;
     }
     if (space.type === 'mystery') {
+      modalResolvedRef.current = false;
       setModal({ kind: 'mystery', space });
       return;
     }
@@ -91,6 +96,8 @@ export function AdventureBoard() {
   };
 
   const closeMystery = (bonus: boolean) => {
+    if (modalResolvedRef.current) return;
+    modalResolvedRef.current = true;
     if (bonus) {
       grantReward(10, 15, 0);
       setMysteryResult('You found a stash of 15 coins and 10 XP!');
@@ -161,6 +168,8 @@ export function AdventureBoard() {
         <ShrineModal
           topicId={modal.space.topicId}
           onClose={() => {
+            if (modalResolvedRef.current) return;
+            modalResolvedRef.current = true;
             markTopicSeen(modal.space.topicId!);
             grantReward(5, 0, 1);
             setModal(null);
