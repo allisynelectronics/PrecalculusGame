@@ -369,7 +369,7 @@ export const PROBLEMS: Problem[] = [
     difficulty: 'beginner',
     prompt: '[Algebra check] Factor completely: $x^3-4x$',
     answerType: 'expression',
-    answer: 'x^3-4*x',
+    answer: 'x*(x-2)*(x+2)',
     variable: 'x',
     hints: ['Factor out the GCF first, then look for a difference of squares.'],
     explanation: 'This combines two foundational skills: factoring out a GCF, then recognizing a difference of squares.',

@@ -82,8 +82,12 @@ function parseIfSafe(exprString: string): MathNode | null {
 
 /** The single safe entry point for evaluating student- or answer-controlled expression
  *  strings. Returns undefined for anything that fails validation, parsing, or evaluation
- *  — callers must treat that as "could not be evaluated," never silently coerce it. */
-function safeEvaluate(exprString: string, scope: Record<string, number> = {}): unknown {
+ *  — callers must treat that as "could not be evaluated," never silently coerce it.
+ *  Exported (alongside normalize/convertLatex) so independent verification tooling can
+ *  evaluate a prompt-derived expression and compare it against a problem's stored answer
+ *  — two different strings from two different sources, not a self-comparison — through
+ *  the same audited, hardened path production code uses. */
+export function safeEvaluate(exprString: string, scope: Record<string, number> = {}): unknown {
   const node = parseIfSafe(exprString);
   if (!node) return undefined;
   try {
@@ -171,7 +175,7 @@ function convertLatex(input: string): string {
 }
 
 /** Normalize common calculator/typing shorthand into mathjs-parseable syntax. */
-function normalize(raw: string): string {
+export function normalize(raw: string): string {
   const latexConverted = convertLatex(raw.trim());
   return latexConverted
     .trim()

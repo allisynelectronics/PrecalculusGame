@@ -11,6 +11,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "verify": "tsx scripts/verifyProblems.ts && tsx scripts/verifyRejects.ts && tsx scripts/verifyLatexInput.ts",
+    "verify:independent": "tsx scripts/independentVerify.ts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },
