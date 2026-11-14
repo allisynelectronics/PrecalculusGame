@@ -65,7 +65,11 @@ export function ProblemView() {
 
   const similarExample = useMemo(() => {
     const pool = getProblemsByTopic(topicId).filter((p) => p.id !== problem.id && p.worked);
-    return pool[Math.floor(Math.random() * Math.max(pool.length, 1))];
+    if (pool.length === 0) return undefined;
+    // Deterministic pick (not Math.random) so this stays pure during render — the same
+    // problem always offers the same "similar example" rather than a new one each render.
+    const hash = [...problem.id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 0);
+    return pool[hash % pool.length];
   }, [topicId, problem.id]);
 
   const example = getProblemsByTopic(topicId).find((p) => p.worked) ?? getProblemsByTopic(topicId)[0];
