@@ -1,6 +1,97 @@
-import { evaluate, parse } from 'mathjs';
+import { parse, type MathNode } from 'mathjs';
 
 const EPS = 1e-6;
+
+// --- Security: all student-controlled input reaches mathjs ONLY through safeEvaluate()
+// below. Plain mathjs evaluate() is not a safe sandbox for untrusted input: it allows
+// inline assignment (x=5, f(x)=x^2), createUnit(), and expensive matrix/range operations
+// (e.g. kron(ones(1000,1000), ones(1000,1000))) that can hang the browser for seconds.
+// This is an allowlist (not a blocklist) validated against every function name actually
+// used across the stored problem bank, calibrated with a margin for legitimate
+// alternate-form student answers.
+const ALLOWED_FUNCTIONS = new Set([
+  'sin', 'cos', 'tan', 'csc', 'sec', 'cot',
+  'asin', 'acos', 'atan', 'acsc', 'asec', 'acot', 'atan2',
+  'sqrt', 'nthRoot', 'cbrt', 'abs',
+  'log', 'log10', 'log2', 'exp',
+  'sign',
+]);
+
+const BLOCKED_NODE_TYPES = new Set([
+  'AssignmentNode',
+  'FunctionAssignmentNode',
+  'RangeNode',
+  'BlockNode',
+  'ObjectNode',
+  'AccessorNode',
+  'IndexNode',
+]);
+
+// The longest legitimate stored answer across all 441 problems is 47 characters;
+// 300 leaves generous room for verbose LaTeX-converted or alternate-form student input
+// while sitting far below the length needed to trigger parser/traversal stack overflows
+// or expensive-operation DoS payloads.
+const MAX_INPUT_LENGTH = 300;
+// Independent guard against deeply-nested-but-short expressions (e.g. "1+1+1+...").
+const MAX_NODE_COUNT = 150;
+
+/**
+ * Validates that a (post-normalize) expression string is safe to hand to mathjs:
+ * bounded in size, free of assignment/range/object/index/accessor nodes, and calling
+ * only an explicit allowlist of functions. Both parse() and the AST traversal are
+ * wrapped in try/catch — a deeply-nested-but-structurally-simple expression can throw
+ * an uncaught RangeError ("Maximum call stack size exceeded") during traversal alone,
+ * not just during parsing or evaluation.
+ */
+function parseIfSafe(exprString: string): MathNode | null {
+  if (exprString.length === 0 || exprString.length > MAX_INPUT_LENGTH) return null;
+
+  let node: MathNode;
+  try {
+    node = parse(exprString);
+  } catch {
+    return null;
+  }
+
+  let safe = true;
+  let nodeCount = 0;
+  try {
+    node.traverse((n: MathNode) => {
+      nodeCount++;
+      if (!safe || nodeCount > MAX_NODE_COUNT) {
+        safe = false;
+        return;
+      }
+      if (BLOCKED_NODE_TYPES.has(n.type)) {
+        safe = false;
+        return;
+      }
+      if (n.type === 'FunctionNode') {
+        const fnName = (n as unknown as { fn?: { name?: string } }).fn?.name;
+        if (!fnName || !ALLOWED_FUNCTIONS.has(fnName)) {
+          safe = false;
+        }
+      }
+    });
+  } catch {
+    return null;
+  }
+
+  return safe ? node : null;
+}
+
+/** The single safe entry point for evaluating student- or answer-controlled expression
+ *  strings. Returns undefined for anything that fails validation, parsing, or evaluation
+ *  — callers must treat that as "could not be evaluated," never silently coerce it. */
+function safeEvaluate(exprString: string, scope: Record<string, number> = {}): unknown {
+  const node = parseIfSafe(exprString);
+  if (!node) return undefined;
+  try {
+    return node.evaluate(scope);
+  } catch {
+    return undefined;
+  }
+}
 
 /** Finds the index of the `}` that matches the `{` at openIndex. */
 function findMatchingBrace(str: string, openIndex: number): number {
@@ -95,14 +186,12 @@ function normalize(raw: string): string {
 }
 
 function tryEvaluateNumeric(expr: string, scope: Record<string, number> = {}): number | null {
-  try {
-    const v = evaluate(normalize(expr), scope);
-    if (typeof v === 'number' && Number.isFinite(v)) return v;
-    if (v && typeof v.re === 'number' && Math.abs(v.im) < EPS) return v.re;
-    return null;
-  } catch {
-    return null;
+  const v = safeEvaluate(normalize(expr), scope);
+  if (typeof v === 'number' && Number.isFinite(v)) return v;
+  if (v && typeof (v as { re?: number }).re === 'number' && Math.abs((v as { im: number }).im) < EPS) {
+    return (v as { re: number }).re;
   }
+  return null;
 }
 
 /** Exact numeric equivalence (handles fractions, radicals, pi, decimals). */
@@ -121,11 +210,7 @@ export function checkExpressionEquivalence(
   correctAnswer: string,
   variable = 'x',
 ): boolean {
-  try {
-    parse(normalize(studentAnswer));
-  } catch {
-    return false;
-  }
+  if (!parseIfSafe(normalize(studentAnswer))) return false;
   const samplePoints = [0.3, 1.7, -2.1, 3.3, 5.5, -0.9];
   let comparedAny = false;
   for (const p of samplePoints) {
@@ -150,11 +235,7 @@ export function checkExpressionEquivalence2(
   var1 = 'x',
   var2 = 'h',
 ): boolean {
-  try {
-    parse(normalize(studentAnswer));
-  } catch {
-    return false;
-  }
+  if (!parseIfSafe(normalize(studentAnswer))) return false;
   const samplePairs: [number, number][] = [
     [0.3, 0.7],
     [1.7, 0.4],
@@ -211,18 +292,15 @@ export function checkSolutionSet(studentAnswer: string, correctAnswer: string): 
 
 /** Compares complex numbers written as e.g. "3-2i", "-1+3i", "4i". */
 export function checkComplex(studentAnswer: string, correctAnswer: string): boolean {
-  try {
-    const a = evaluate(normalize(studentAnswer));
-    const b = evaluate(normalize(correctAnswer));
-    const are = typeof a === 'object' && a !== null && 're' in a ? (a as { re: number }).re : (a as number);
-    const aim = typeof a === 'object' && a !== null && 'im' in a ? (a as { im: number }).im : 0;
-    const bre = typeof b === 'object' && b !== null && 're' in b ? (b as { re: number }).re : (b as number);
-    const bim = typeof b === 'object' && b !== null && 'im' in b ? (b as { im: number }).im : 0;
-    if (typeof are !== 'number' || typeof bre !== 'number') return false;
-    return Math.abs(are - bre) < 1e-4 && Math.abs(aim - bim) < 1e-4;
-  } catch {
-    return false;
-  }
+  const a = safeEvaluate(normalize(studentAnswer));
+  const b = safeEvaluate(normalize(correctAnswer));
+  if (a === undefined || b === undefined) return false;
+  const are = typeof a === 'object' && a !== null && 're' in a ? (a as { re: number }).re : (a as number);
+  const aim = typeof a === 'object' && a !== null && 'im' in a ? (a as { im: number }).im : 0;
+  const bre = typeof b === 'object' && b !== null && 're' in b ? (b as { re: number }).re : (b as number);
+  const bim = typeof b === 'object' && b !== null && 'im' in b ? (b as { im: number }).im : 0;
+  if (typeof are !== 'number' || typeof bre !== 'number') return false;
+  return Math.abs(are - bre) < 1e-4 && Math.abs(aim - bim) < 1e-4;
 }
 
 function splitEquation(s: string): [string, string] | null {

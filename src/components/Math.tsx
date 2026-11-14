@@ -1,6 +1,15 @@
 import katex from 'katex';
 import { useMemo } from 'react';
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /**
  * Renders a string containing a mix of plain text and $...$ KaTeX math segments.
  */
@@ -11,12 +20,14 @@ export function MathText({ text, className }: { text: string; className?: string
       .map((part, i) => {
         if (i % 2 === 1) {
           try {
-            return katex.renderToString(part, { throwOnError: false, displayMode: false });
+            return katex.renderToString(part, { throwOnError: false, displayMode: false, trust: false });
           } catch {
-            return part;
+            // KaTeX failed to render this segment — fall back to the raw source, escaped,
+            // since it's going into dangerouslySetInnerHTML just like the happy path.
+            return escapeHtml(part);
           }
         }
-        return part.replace(/</g, '&lt;');
+        return escapeHtml(part);
       })
       .join('');
   }, [text]);
@@ -27,9 +38,9 @@ export function MathText({ text, className }: { text: string; className?: string
 export function MathBlock({ tex, className }: { tex: string; className?: string }) {
   const html = useMemo(() => {
     try {
-      return katex.renderToString(tex, { throwOnError: false, displayMode: true });
+      return katex.renderToString(tex, { throwOnError: false, displayMode: true, trust: false });
     } catch {
-      return tex;
+      return escapeHtml(tex);
     }
   }, [tex]);
   return <div className={className} dangerouslySetInnerHTML={{ __html: html }} />;

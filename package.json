@@ -10,7 +10,9 @@
     "release": "npm run build:single && node -e \"require('fs').copyFileSync('dist-single/index.html','mathverse-single-file.html')\"",
     "lint": "oxlint",
     "preview": "vite preview",
-    "verify": "tsx scripts/verifyProblems.ts && tsx scripts/verifyRejects.ts && tsx scripts/verifyLatexInput.ts"
+    "verify": "tsx scripts/verifyProblems.ts && tsx scripts/verifyRejects.ts && tsx scripts/verifyLatexInput.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.5",
@@ -29,10 +31,12 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/coverage-v8": "^4.1.12",
     "oxlint": "^1.90.0",
     "tsx": "^4.23.15",
     "typescript": "~7.0.2",
     "vite": "^8.3.6",
-    "vite-plugin-singlefile": "^2.3.4"
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^4.1.12"
   }
 }
