@@ -8,6 +8,7 @@ import { HUD } from './components/HUD';
 import { ObliqueTriangleSolver } from './components/ObliqueTriangleSolver';
 import { ConicSectionExplorer } from './components/ConicSectionExplorer';
 import { ExponentialLogGraphExplorer } from './components/ExponentialLogGraphExplorer';
+import { MatrixRowOperationSimulator } from './components/MatrixRowOperationSimulator';
 import { PascalsTriangleExplorer } from './components/PascalsTriangleExplorer';
 import { PolarGrapher } from './components/PolarGrapher';
 import { PolynomialGraphExplorer } from './components/PolynomialGraphExplorer';
@@ -51,6 +52,7 @@ function App() {
       {screen === 'trigequation' && <TrigEquationExplorer />}
       {screen === 'pascalstriangle' && <PascalsTriangleExplorer />}
       {screen === 'sequenceexplorer' && <SequenceSeriesExplorer />}
+      {screen === 'matrixsimulator' && <MatrixRowOperationSimulator />}
     </>
   );
 }

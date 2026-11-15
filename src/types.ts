@@ -142,7 +142,8 @@ export type Screen =
   | 'conicexplorer'
   | 'trigequation'
   | 'pascalstriangle'
-  | 'sequenceexplorer';
+  | 'sequenceexplorer'
+  | 'matrixsimulator';
 
 export interface AttemptRecord {
   problemId: string;

@@ -18,6 +18,7 @@ const WORLD_LABS: Partial<Record<string, { screen: Screen; icon: string; label: 
     { screen: 'pascalstriangle', icon: '🔺', label: "Pascal's Triangle" },
     { screen: 'sequenceexplorer', icon: '🔢', label: 'Sequence Explorer' },
   ],
+  'matrix-fortress': [{ screen: 'matrixsimulator', icon: '🧮', label: 'Matrix Simulator' }],
   'wave-galaxy': [
     { screen: 'trigwave', icon: '🌊', label: 'Wave Visualizer' },
     { screen: 'trigequation', icon: '🧩', label: 'Equation Solver' },
