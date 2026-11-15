@@ -13,6 +13,7 @@ import { PolarGrapher } from './components/PolarGrapher';
 import { PolynomialGraphExplorer } from './components/PolynomialGraphExplorer';
 import { ProblemView } from './components/ProblemView';
 import { RationalGraphExplorer } from './components/RationalGraphExplorer';
+import { SequenceSeriesExplorer } from './components/SequenceSeriesExplorer';
 import { TrigEquationExplorer } from './components/TrigEquationExplorer';
 import { SaveRecoveryBanner } from './components/SaveRecoveryBanner';
 import { TitleScreen } from './components/TitleScreen';
@@ -49,6 +50,7 @@ function App() {
       {screen === 'conicexplorer' && <ConicSectionExplorer />}
       {screen === 'trigequation' && <TrigEquationExplorer />}
       {screen === 'pascalstriangle' && <PascalsTriangleExplorer />}
+      {screen === 'sequenceexplorer' && <SequenceSeriesExplorer />}
     </>
   );
 }

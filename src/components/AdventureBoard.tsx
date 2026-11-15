@@ -14,7 +14,10 @@ const WORLD_LABS: Partial<Record<string, { screen: Screen; icon: string; label: 
   'polynomial-peaks': [{ screen: 'polynomialgrapher', icon: '📈', label: 'Polynomial Grapher' }],
   'exponential-empire': [{ screen: 'explographer', icon: '🏙️', label: 'Exp/Log Grapher' }],
   'conic-constellation': [{ screen: 'conicexplorer', icon: '🔭', label: 'Conic Explorer' }],
-  'sequence-summit': [{ screen: 'pascalstriangle', icon: '🔺', label: "Pascal's Triangle" }],
+  'sequence-summit': [
+    { screen: 'pascalstriangle', icon: '🔺', label: "Pascal's Triangle" },
+    { screen: 'sequenceexplorer', icon: '🔢', label: 'Sequence Explorer' },
+  ],
   'wave-galaxy': [
     { screen: 'trigwave', icon: '🌊', label: 'Wave Visualizer' },
     { screen: 'trigequation', icon: '🧩', label: 'Equation Solver' },

@@ -141,7 +141,8 @@ export type Screen =
   | 'explographer'
   | 'conicexplorer'
   | 'trigequation'
-  | 'pascalstriangle';
+  | 'pascalstriangle'
+  | 'sequenceexplorer';
 
 export interface AttemptRecord {
   problemId: string;
