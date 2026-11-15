@@ -12,6 +12,7 @@ import { PolarGrapher } from './components/PolarGrapher';
 import { PolynomialGraphExplorer } from './components/PolynomialGraphExplorer';
 import { ProblemView } from './components/ProblemView';
 import { RationalGraphExplorer } from './components/RationalGraphExplorer';
+import { TrigEquationExplorer } from './components/TrigEquationExplorer';
 import { SaveRecoveryBanner } from './components/SaveRecoveryBanner';
 import { TitleScreen } from './components/TitleScreen';
 import { TrigWaveVisualizer } from './components/TrigWaveVisualizer';
@@ -45,6 +46,7 @@ function App() {
       {screen === 'polynomialgrapher' && <PolynomialGraphExplorer />}
       {screen === 'explographer' && <ExponentialLogGraphExplorer />}
       {screen === 'conicexplorer' && <ConicSectionExplorer />}
+      {screen === 'trigequation' && <TrigEquationExplorer />}
     </>
   );
 }

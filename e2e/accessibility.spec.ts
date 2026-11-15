@@ -134,4 +134,10 @@ test.describe('accessibility (axe-core, WCAG 2.2 AA tags)', () => {
     const results = await runAxe(page);
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
   });
+
+  test('trig equation solution explorer', async ({ page }) => {
+    await gotoScreen(page, 'trigequation', 'wave-galaxy');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
 });

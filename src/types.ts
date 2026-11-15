@@ -139,7 +139,8 @@ export type Screen =
   | 'rationalgrapher'
   | 'polynomialgrapher'
   | 'explographer'
-  | 'conicexplorer';
+  | 'conicexplorer'
+  | 'trigequation';
 
 export interface AttemptRecord {
   problemId: string;
