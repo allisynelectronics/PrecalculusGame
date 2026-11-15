@@ -140,4 +140,10 @@ test.describe('accessibility (axe-core, WCAG 2.2 AA tags)', () => {
     const results = await runAxe(page);
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
   });
+
+  test("pascal's triangle explorer", async ({ page }) => {
+    await gotoScreen(page, 'pascalstriangle', 'sequence-summit');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
 });

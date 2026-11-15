@@ -140,7 +140,8 @@ export type Screen =
   | 'polynomialgrapher'
   | 'explographer'
   | 'conicexplorer'
-  | 'trigequation';
+  | 'trigequation'
+  | 'pascalstriangle';
 
 export interface AttemptRecord {
   problemId: string;

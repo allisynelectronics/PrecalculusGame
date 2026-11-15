@@ -8,6 +8,7 @@ import { HUD } from './components/HUD';
 import { ObliqueTriangleSolver } from './components/ObliqueTriangleSolver';
 import { ConicSectionExplorer } from './components/ConicSectionExplorer';
 import { ExponentialLogGraphExplorer } from './components/ExponentialLogGraphExplorer';
+import { PascalsTriangleExplorer } from './components/PascalsTriangleExplorer';
 import { PolarGrapher } from './components/PolarGrapher';
 import { PolynomialGraphExplorer } from './components/PolynomialGraphExplorer';
 import { ProblemView } from './components/ProblemView';
@@ -47,6 +48,7 @@ function App() {
       {screen === 'explographer' && <ExponentialLogGraphExplorer />}
       {screen === 'conicexplorer' && <ConicSectionExplorer />}
       {screen === 'trigequation' && <TrigEquationExplorer />}
+      {screen === 'pascalstriangle' && <PascalsTriangleExplorer />}
     </>
   );
 }
