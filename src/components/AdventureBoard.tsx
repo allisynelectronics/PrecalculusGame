@@ -12,6 +12,7 @@ const WORLD_LABS: Partial<Record<string, { screen: Screen; icon: string; label: 
   'trig-kingdom': [{ screen: 'unitcircle', icon: '🔵', label: 'Unit Circle Lab' }],
   'rational-rift': [{ screen: 'rationalgrapher', icon: '📉', label: 'Rational Grapher' }],
   'polynomial-peaks': [{ screen: 'polynomialgrapher', icon: '📈', label: 'Polynomial Grapher' }],
+  'exponential-empire': [{ screen: 'explographer', icon: '🏙️', label: 'Exp/Log Grapher' }],
   'wave-galaxy': [{ screen: 'trigwave', icon: '🌊', label: 'Wave Visualizer' }],
   'triangle-expedition': [{ screen: 'obliquetriangle', icon: '📐', label: 'Triangle Solver' }],
   'polar-vector-valley': [

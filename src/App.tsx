@@ -6,6 +6,7 @@ import { Dashboard } from './components/Dashboard';
 import { Diagnostic } from './components/Diagnostic';
 import { HUD } from './components/HUD';
 import { ObliqueTriangleSolver } from './components/ObliqueTriangleSolver';
+import { ExponentialLogGraphExplorer } from './components/ExponentialLogGraphExplorer';
 import { PolarGrapher } from './components/PolarGrapher';
 import { PolynomialGraphExplorer } from './components/PolynomialGraphExplorer';
 import { ProblemView } from './components/ProblemView';
@@ -41,6 +42,7 @@ function App() {
       {screen === 'polargrapher' && <PolarGrapher />}
       {screen === 'rationalgrapher' && <RationalGraphExplorer />}
       {screen === 'polynomialgrapher' && <PolynomialGraphExplorer />}
+      {screen === 'explographer' && <ExponentialLogGraphExplorer />}
     </>
   );
 }

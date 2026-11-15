@@ -137,7 +137,8 @@ export type Screen =
   | 'vectorlab'
   | 'polargrapher'
   | 'rationalgrapher'
-  | 'polynomialgrapher';
+  | 'polynomialgrapher'
+  | 'explographer';
 
 export interface AttemptRecord {
   problemId: string;
