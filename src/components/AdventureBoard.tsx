@@ -10,6 +10,8 @@ import { MathText } from './Math';
 // Interactive labs, keyed by the world whose board should offer a shortcut to them.
 const WORLD_LABS: Partial<Record<string, { screen: Screen; icon: string; label: string }[]>> = {
   'trig-kingdom': [{ screen: 'unitcircle', icon: '🔵', label: 'Unit Circle Lab' }],
+  'rational-rift': [{ screen: 'rationalgrapher', icon: '📉', label: 'Rational Grapher' }],
+  'polynomial-peaks': [{ screen: 'polynomialgrapher', icon: '📈', label: 'Polynomial Grapher' }],
   'wave-galaxy': [{ screen: 'trigwave', icon: '🌊', label: 'Wave Visualizer' }],
   'triangle-expedition': [{ screen: 'obliquetriangle', icon: '📐', label: 'Triangle Solver' }],
   'polar-vector-valley': [

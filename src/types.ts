@@ -135,7 +135,9 @@ export type Screen =
   | 'trigwave'
   | 'obliquetriangle'
   | 'vectorlab'
-  | 'polargrapher';
+  | 'polargrapher'
+  | 'rationalgrapher'
+  | 'polynomialgrapher';
 
 export interface AttemptRecord {
   problemId: string;

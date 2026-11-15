@@ -110,4 +110,16 @@ test.describe('accessibility (axe-core, WCAG 2.2 AA tags)', () => {
     const results = await runAxe(page);
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
   });
+
+  test('rational function graph explorer', async ({ page }) => {
+    await gotoScreen(page, 'rationalgrapher', 'rational-rift');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
+
+  test('polynomial graph explorer', async ({ page }) => {
+    await gotoScreen(page, 'polynomialgrapher', 'polynomial-peaks');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
 });

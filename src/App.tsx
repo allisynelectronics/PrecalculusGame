@@ -7,7 +7,9 @@ import { Diagnostic } from './components/Diagnostic';
 import { HUD } from './components/HUD';
 import { ObliqueTriangleSolver } from './components/ObliqueTriangleSolver';
 import { PolarGrapher } from './components/PolarGrapher';
+import { PolynomialGraphExplorer } from './components/PolynomialGraphExplorer';
 import { ProblemView } from './components/ProblemView';
+import { RationalGraphExplorer } from './components/RationalGraphExplorer';
 import { SaveRecoveryBanner } from './components/SaveRecoveryBanner';
 import { TitleScreen } from './components/TitleScreen';
 import { TrigWaveVisualizer } from './components/TrigWaveVisualizer';
@@ -37,6 +39,8 @@ function App() {
       {screen === 'obliquetriangle' && <ObliqueTriangleSolver />}
       {screen === 'vectorlab' && <VectorSimulator />}
       {screen === 'polargrapher' && <PolarGrapher />}
+      {screen === 'rationalgrapher' && <RationalGraphExplorer />}
+      {screen === 'polynomialgrapher' && <PolynomialGraphExplorer />}
     </>
   );
 }
