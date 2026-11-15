@@ -115,11 +115,18 @@ TOPICS.push(
     prerequisite: 'poly-remainder-factor-theorem',
   },
   {
+    id: 'poly-descartes-rule',
+    worldId: 'polynomial-peaks',
+    name: "Descartes' Rule of Signs",
+    description: 'Use sign changes in f(x) and f(-x) to predict how many positive or negative real zeros a polynomial can have.',
+    prerequisite: 'poly-rational-zero-theorem',
+  },
+  {
     id: 'poly-complex-zeros',
     worldId: 'polynomial-peaks',
     name: 'Complex Zeros & Conjugate Pairs',
     description: 'Find the complex-conjugate partner of a nonreal zero.',
-    prerequisite: 'poly-rational-zero-theorem',
+    prerequisite: 'poly-descartes-rule',
   },
   {
     id: 'poly-constructing-polynomials',
@@ -173,11 +180,18 @@ TOPICS.push(
     prerequisite: 'rf-simplify',
   },
   {
+    id: 'rf-partial-fractions',
+    worldId: 'rational-rift',
+    name: 'Partial Fraction Decomposition',
+    description: 'Split a rational expression with distinct linear factors back into a sum of simpler fractions.',
+    prerequisite: 'rf-rational-equations',
+  },
+  {
     id: 'rf-polynomial-inequalities',
     worldId: 'rational-rift',
     name: 'Polynomial Inequalities',
     description: 'Use a sign chart to solve a polynomial inequality in interval notation.',
-    prerequisite: 'rf-rational-equations',
+    prerequisite: 'rf-partial-fractions',
   },
   {
     id: 'rf-rational-inequalities',
