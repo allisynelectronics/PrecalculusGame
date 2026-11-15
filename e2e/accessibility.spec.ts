@@ -128,4 +128,10 @@ test.describe('accessibility (axe-core, WCAG 2.2 AA tags)', () => {
     const results = await runAxe(page);
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
   });
+
+  test('conic section explorer', async ({ page }) => {
+    await gotoScreen(page, 'conicexplorer', 'conic-constellation');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
 });

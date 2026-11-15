@@ -138,7 +138,8 @@ export type Screen =
   | 'polargrapher'
   | 'rationalgrapher'
   | 'polynomialgrapher'
-  | 'explographer';
+  | 'explographer'
+  | 'conicexplorer';
 
 export interface AttemptRecord {
   problemId: string;

@@ -13,6 +13,7 @@ const WORLD_LABS: Partial<Record<string, { screen: Screen; icon: string; label: 
   'rational-rift': [{ screen: 'rationalgrapher', icon: '📉', label: 'Rational Grapher' }],
   'polynomial-peaks': [{ screen: 'polynomialgrapher', icon: '📈', label: 'Polynomial Grapher' }],
   'exponential-empire': [{ screen: 'explographer', icon: '🏙️', label: 'Exp/Log Grapher' }],
+  'conic-constellation': [{ screen: 'conicexplorer', icon: '🔭', label: 'Conic Explorer' }],
   'wave-galaxy': [{ screen: 'trigwave', icon: '🌊', label: 'Wave Visualizer' }],
   'triangle-expedition': [{ screen: 'obliquetriangle', icon: '📐', label: 'Triangle Solver' }],
   'polar-vector-valley': [
