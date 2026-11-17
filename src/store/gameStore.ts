@@ -34,6 +34,7 @@ interface GameState {
   pendingSpaceType: SpaceType | null;
   returnScreen: Screen; // where to go back to after a problem/lesson
   lastReward: { xp: number; coins: number; stars: number } | null;
+  lastPracticeTopicId: string | null; // last topic opened from Free Practice, for "practice again"
 
   setScreen: (s: Screen) => void;
   setCharacter: (c: Character) => void;
@@ -216,6 +217,7 @@ export const useGameStore = create<GameState>()(
       pendingSpaceType: null,
       returnScreen: 'board',
       lastReward: null,
+      lastPracticeTopicId: null,
 
       setScreen: (s) => set({ screen: s }),
       setCharacter: (c) => set({ character: c }),
@@ -260,7 +262,13 @@ export const useGameStore = create<GameState>()(
         }),
 
       startProblem: (topicId, returnScreen, spaceType) =>
-        set({ pendingTopicId: topicId, screen: 'problem', returnScreen, pendingSpaceType: spaceType ?? 'challenge' }),
+        set({
+          pendingTopicId: topicId,
+          screen: 'problem',
+          returnScreen,
+          pendingSpaceType: spaceType ?? 'challenge',
+          ...(returnScreen === 'freepractice' ? { lastPracticeTopicId: topicId } : {}),
+        }),
 
       clearProblem: () => set({ pendingTopicId: null, activeProblemId: null, pendingSpaceType: null }),
 
@@ -305,6 +313,7 @@ export const useGameStore = create<GameState>()(
           pendingSpaceType: null,
           returnScreen: 'board',
           lastReward: null,
+          lastPracticeTopicId: null,
         }),
 
       exportSave: () => JSON.stringify({ state: stripActions(get() as GameState), version: SCHEMA_VERSION }, null, 2),

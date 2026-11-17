@@ -4,6 +4,23 @@ import { checkExpressionEquivalence } from '../src/lib/mathCheck';
 
 let failures = 0;
 
+// Every world's problems file is written independently, so nothing stops two unrelated
+// topics from reusing the same two-letter ID prefix — and since all problems merge into
+// one flat array looked up by ID (getProblem, similarExampleId), a collision means one
+// problem silently shadows the other for any ID-based lookup. 15 such collisions were
+// found by hand in one audit pass; this check exists so the next one is caught here
+// instead of by chance.
+const seenIds = new Map<string, string>();
+for (const p of ALL_PROBLEMS) {
+  const priorTopic = seenIds.get(p.id);
+  if (priorTopic) {
+    failures++;
+    console.log(`FAIL (duplicate id) "${p.id}" used by both "${priorTopic}" and "${p.topicId}"`);
+  } else {
+    seenIds.set(p.id, p.topicId);
+  }
+}
+
 for (const p of ALL_PROBLEMS) {
   if (p.answerType === 'identityProof') {
     if (!p.startExpr || !p.rhsExpr || !p.proofStages || p.proofStages.length === 0) {

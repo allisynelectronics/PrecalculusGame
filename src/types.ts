@@ -143,7 +143,8 @@ export type Screen =
   | 'trigequation'
   | 'pascalstriangle'
   | 'sequenceexplorer'
-  | 'matrixsimulator';
+  | 'matrixsimulator'
+  | 'freepractice';
 
 export interface AttemptRecord {
   problemId: string;

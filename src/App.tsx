@@ -4,6 +4,7 @@ import { CharacterCreation } from './components/CharacterCreation';
 import { Compendium } from './components/Compendium';
 import { Dashboard } from './components/Dashboard';
 import { Diagnostic } from './components/Diagnostic';
+import { FreePractice } from './components/FreePractice';
 import { HUD } from './components/HUD';
 import { ObliqueTriangleSolver } from './components/ObliqueTriangleSolver';
 import { ConicSectionExplorer } from './components/ConicSectionExplorer';
@@ -53,6 +54,7 @@ function App() {
       {screen === 'pascalstriangle' && <PascalsTriangleExplorer />}
       {screen === 'sequenceexplorer' && <SequenceSeriesExplorer />}
       {screen === 'matrixsimulator' && <MatrixRowOperationSimulator />}
+      {screen === 'freepractice' && <FreePractice />}
     </>
   );
 }

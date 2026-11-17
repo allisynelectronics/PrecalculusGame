@@ -23,27 +23,33 @@ export function HUD() {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-4 text-amber-200">
-        <span>🪙 {coins}</span>
-        <span>⭐ {stars}</span>
-        <span>✨ {xp} XP</span>
+      <div className="flex items-center gap-1.5 sm:gap-4 text-amber-200 flex-wrap justify-end">
+        <span className="text-xs sm:text-sm">🪙 {coins}</span>
+        <span className="text-xs sm:text-sm">⭐ {stars}</span>
+        <span className="text-xs sm:text-sm">✨ {xp} XP</span>
         <button
           onClick={() => setScreen('worldmap')}
-          className={`ml-2 px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'worldmap' ? 'bg-purple-500/30' : ''}`}
+          className={`sm:ml-2 px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'worldmap' ? 'bg-purple-500/30' : ''}`}
         >
-          🗺️ Map
+          🗺️<span className="hidden sm:inline"> Map</span>
         </button>
         <button
           onClick={() => setScreen('dashboard')}
           className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'dashboard' ? 'bg-purple-500/30' : ''}`}
         >
-          📊 Dashboard
+          📊<span className="hidden sm:inline"> Dashboard</span>
+        </button>
+        <button
+          onClick={() => setScreen('freepractice')}
+          className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'freepractice' ? 'bg-purple-500/30' : ''}`}
+        >
+          🎯<span className="hidden sm:inline"> Practice</span>
         </button>
         <button
           onClick={() => setScreen('compendium')}
           className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'compendium' ? 'bg-purple-500/30' : ''}`}
         >
-          📖 Book
+          📖<span className="hidden sm:inline"> Book</span>
         </button>
       </div>
     </div>

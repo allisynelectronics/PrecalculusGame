@@ -71,6 +71,45 @@ test.describe('full player journey', () => {
     await expect(page.locator('body')).not.toContainText('Something went wrong');
   });
 
+  test('free practice: pick a world, pick a topic, solve, and return to the picker', async ({ page }) => {
+    await createCharacterAndReachWorldMap(page);
+    await page.getByText('🎯 Practice').click();
+    await expect(page.getByRole('heading', { name: 'Free Practice' })).toBeVisible();
+
+    // Diagnostic-seeded mastery can put some Foundation Forge topics in the "Needs
+    // Practice" shortcut list too, whose rows are also named "<topic><world>" — so this
+    // must be an exact match on the world-picker pill, not a substring match.
+    await page.getByRole('button', { name: 'The Foundation Forge', exact: true }).click();
+    // Diagnostic-seeded mastery can also list this topic in the "Needs Practice"
+    // shortcut above, so the topic name may appear twice on the page.
+    await expect(page.getByText('Integer Operations & Order of Operations').first()).toBeVisible();
+
+    const practiceButtons = page.getByRole('button', { name: 'Practice', exact: true });
+    await practiceButtons.first().click();
+
+    // First encounter with a topic shows the "Discover" stage before the solve stage.
+    const readyButton = page.getByRole('button', { name: "I'm ready to try one myself" });
+    if (await readyButton.isVisible().catch(() => false)) {
+      await readyButton.click();
+    }
+
+    await expect(page.getByPlaceholder(/e\.g\./)).toBeVisible({ timeout: 5000 });
+    const tex = ((await page.locator('.text-lg.text-purple-100 annotation').first().textContent()) ?? '').trim();
+    const problem = ALL_PROBLEMS.find((p) => p.prompt.includes(tex));
+    expect(problem, `could not identify rendered problem from TeX source: "${tex}"`).toBeTruthy();
+
+    await page.getByPlaceholder(/e\.g\./).fill(problem!.answer);
+    await page.getByRole('button', { name: 'Submit' }).click();
+    await expect(page.getByText('Correct!')).toBeVisible({ timeout: 3000 });
+
+    await page.getByRole('button', { name: 'Continue' }).click();
+
+    // Back at the picker (not the board), with a "practice again" shortcut for the topic
+    // just solved.
+    await expect(page.getByRole('heading', { name: 'Free Practice' })).toBeVisible();
+    await expect(page.getByText('Practice again')).toBeVisible();
+  });
+
   test('compendium opens and the A-Z rail scrolls to a letter', async ({ page }) => {
     await createCharacterAndReachWorldMap(page);
     await page.getByText('📖 Book').click();
