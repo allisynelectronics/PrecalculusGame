@@ -70,6 +70,41 @@ export const TOPICS: Topic[] = [
     description: 'Evaluate functions and determine domain and range.',
     prerequisite: 'quadratic-equations',
   },
+  {
+    id: 'complex-numbers',
+    worldId: 'foundation-forge',
+    name: 'Complex Numbers',
+    description: 'Add, subtract, multiply, and divide complex numbers, and simplify powers of i.',
+    prerequisite: 'radicals',
+  },
+  {
+    id: 'function-transformations',
+    worldId: 'foundation-forge',
+    name: 'Transformations of Functions',
+    description: 'Shift, stretch, compress, and reflect the graph of a function from its equation.',
+    prerequisite: 'function-notation',
+  },
+  {
+    id: 'composite-functions',
+    worldId: 'foundation-forge',
+    name: 'Composite Functions',
+    description: 'Evaluate and find the formula for (f∘g)(x) and (g∘f)(x).',
+    prerequisite: 'function-transformations',
+  },
+  {
+    id: 'inverse-functions',
+    worldId: 'foundation-forge',
+    name: 'Inverse Functions',
+    description: 'Find the inverse of a function algebraically and verify two functions are inverses.',
+    prerequisite: 'composite-functions',
+  },
+  {
+    id: 'circles',
+    worldId: 'foundation-forge',
+    name: 'Equations of Circles',
+    description: 'Find the center and radius of a circle from its standard or general-form equation.',
+    prerequisite: 'function-notation',
+  },
 ];
 
 TOPICS.push(
@@ -622,11 +657,32 @@ TOPICS.push(
     prerequisite: 'systems-2var',
   },
   {
+    id: 'nonlinear-systems',
+    worldId: 'matrix-fortress',
+    name: 'Nonlinear Systems of Equations',
+    description: 'Solve a system where at least one equation is nonlinear, by substitution or elimination.',
+    prerequisite: 'systems-3var',
+  },
+  {
+    id: 'systems-of-inequalities',
+    worldId: 'matrix-fortress',
+    name: 'Systems of Inequalities',
+    description: 'Determine whether a point satisfies every inequality in a system.',
+    prerequisite: 'nonlinear-systems',
+  },
+  {
+    id: 'linear-programming',
+    worldId: 'matrix-fortress',
+    name: 'Linear Programming',
+    description: 'Maximize or minimize an objective function by evaluating it at each corner of the feasible region.',
+    prerequisite: 'systems-of-inequalities',
+  },
+  {
     id: 'matrix-dimensions-operations',
     worldId: 'matrix-fortress',
     name: 'Matrix Addition, Subtraction & Scalar Multiplication',
     description: 'Combine matrices entry by entry, and scale a matrix by a constant.',
-    prerequisite: 'systems-3var',
+    prerequisite: 'linear-programming',
   },
   {
     id: 'matrix-multiplication',
@@ -720,6 +776,27 @@ TOPICS.push(
     name: 'Finding a Specific Binomial Term',
     description: 'Find one specified term (or its coefficient) in a binomial expansion.',
     prerequisite: 'binomial-theorem',
+  },
+  {
+    id: 'mathematical-induction',
+    worldId: 'sequence-summit',
+    name: 'Mathematical Induction',
+    description: 'Prove a formula for all positive integers using a base case and an inductive step.',
+    prerequisite: 'binomial-specific-term',
+  },
+  {
+    id: 'counting-principles',
+    worldId: 'sequence-summit',
+    name: 'Counting Principles, Permutations & Combinations',
+    description: 'Count outcomes using the Fundamental Counting Principle, permutations, and combinations.',
+    prerequisite: 'mathematical-induction',
+  },
+  {
+    id: 'probability',
+    worldId: 'sequence-summit',
+    name: 'Probability',
+    description: 'Find the probability of an event using favorable outcomes over total outcomes.',
+    prerequisite: 'counting-principles',
   },
 );
 
