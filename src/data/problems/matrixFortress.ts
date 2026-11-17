@@ -227,7 +227,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- linear-programming ----------
   {
-    id: 'lp-b1',
+    id: 'lg-b1',
     topicId: 'linear-programming',
     difficulty: 'beginner',
     prompt: 'The feasible region has corner points $(0,0)$, $(4,0)$, $(0,6)$, and $(3,4)$. Maximize $P=2x+3y$.',
@@ -239,7 +239,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Maximum $P=18$'],
   },
   {
-    id: 'lp-b2',
+    id: 'lg-b2',
     topicId: 'linear-programming',
     difficulty: 'beginner',
     prompt: 'Using the same corner points $(0,0)$, $(4,0)$, $(0,6)$, and $(3,4)$, minimize $P=2x+3y$.',
@@ -251,7 +251,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Minimum $P=0$ at $(0,0)$'],
   },
   {
-    id: 'lp-i1',
+    id: 'lg-i1',
     topicId: 'linear-programming',
     difficulty: 'intermediate',
     prompt: 'The feasible region has corner points $(0,0)$, $(5,0)$, $(4,3)$, and $(0,5)$. Maximize $P=4x+5y$.',
@@ -263,7 +263,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Maximum $P=31$ at $(4,3)$'],
   },
   {
-    id: 'lp-a1',
+    id: 'lg-a1',
     topicId: 'linear-programming',
     difficulty: 'advanced',
     prompt: 'A furniture maker earns a profit of \\$15 per chair ($x$) and \\$20 per table ($y$), subject to $2x+y\\le10$, $x+3y\\le15$, $x\\ge0$, $y\\ge0$. The feasible region\'s corner points are $(0,0)$, $(5,0)$, $(3,4)$, and $(0,5)$. Find the maximum possible profit.',

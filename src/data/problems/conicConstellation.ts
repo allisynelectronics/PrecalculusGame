@@ -110,7 +110,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- ellipse-standard-form ----------
   {
-    id: 'ef-b1',
+    id: 'ep-b1',
     topicId: 'ellipse-standard-form',
     difficulty: 'beginner',
     prompt: 'For $\\dfrac{x^2}{25}+\\dfrac{y^2}{9}=1$, find the $x$-coordinate of the right vertex.',
@@ -122,7 +122,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Right vertex: $(5,0)$'],
   },
   {
-    id: 'ef-b2',
+    id: 'ep-b2',
     topicId: 'ellipse-standard-form',
     difficulty: 'beginner',
     prompt: 'For $\\dfrac{x^2}{16}+\\dfrac{y^2}{36}=1$, find the $y$-coordinate of the top vertex.',
@@ -134,7 +134,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Top vertex: $(0,6)$'],
   },
   {
-    id: 'ef-i1',
+    id: 'ep-i1',
     topicId: 'ellipse-standard-form',
     difficulty: 'intermediate',
     prompt: 'Find the center of $\\dfrac{(x-2)^2}{49}+\\dfrac{(y+1)^2}{25}=1$. Enter as $a+bi$.',
@@ -146,7 +146,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Center: $(2,-1)$'],
   },
   {
-    id: 'ef-a1',
+    id: 'ep-a1',
     topicId: 'ellipse-standard-form',
     difficulty: 'advanced',
     prompt: 'For $\\dfrac{x^2}{25}+\\dfrac{y^2}{9}=1$, find the positive $x$-coordinate of a focus.',
@@ -260,7 +260,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- identifying-conics ----------
   {
-    id: 'ic-b1',
+    id: 'ig-b1',
     topicId: 'identifying-conics',
     difficulty: 'beginner',
     prompt: 'Identify the conic: $x^2+y^2-4x+6y-3=0$.',
@@ -273,7 +273,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Circle'],
   },
   {
-    id: 'ic-b2',
+    id: 'ig-b2',
     topicId: 'identifying-conics',
     difficulty: 'beginner',
     prompt: 'Identify the conic: $4x^2+9y^2-16x+18y-11=0$.',
@@ -286,7 +286,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Ellipse'],
   },
   {
-    id: 'ic-i1',
+    id: 'ig-i1',
     topicId: 'identifying-conics',
     difficulty: 'intermediate',
     prompt: 'Identify the conic: $y^2-4y-8x+4=0$.',
@@ -299,7 +299,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Parabola'],
   },
   {
-    id: 'ic-a1',
+    id: 'ig-a1',
     topicId: 'identifying-conics',
     difficulty: 'advanced',
     prompt: 'Identify the conic: $9x^2-4y^2-36x-8y-4=0$.',
@@ -314,7 +314,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- parametric-equations ----------
   {
-    id: 'pe-b1',
+    id: 'pq-b1',
     topicId: 'parametric-equations',
     difficulty: 'beginner',
     prompt: 'Given $x=t+1$, $y=t^2$, find the point at $t=2$. Enter as $a+bi$.',
@@ -326,7 +326,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$(3,4)$'],
   },
   {
-    id: 'pe-b2',
+    id: 'pq-b2',
     topicId: 'parametric-equations',
     difficulty: 'beginner',
     prompt: 'Eliminate the parameter: $x=t-2$, $y=3t+1$. Express $y$ in terms of $x$.',
@@ -339,7 +339,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$y=3x+7$'],
   },
   {
-    id: 'pe-i1',
+    id: 'pq-i1',
     topicId: 'parametric-equations',
     difficulty: 'intermediate',
     prompt: 'Given $x=2\\cos t$, $y=2\\sin t$, eliminate the parameter to write the equation in the form $x^2+y^2=\\boxed{?}$. Find the missing value.',
@@ -351,7 +351,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$x^2+y^2=4$'],
   },
   {
-    id: 'pe-a1',
+    id: 'pq-a1',
     topicId: 'parametric-equations',
     difficulty: 'advanced',
     prompt: 'Eliminate the parameter: $x=t^2$, $y=2t$ (for $t\\ge0$). Express $x$ in terms of $y$.',

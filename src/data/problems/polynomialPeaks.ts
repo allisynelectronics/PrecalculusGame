@@ -180,7 +180,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- poly-synthetic-division ----------
   {
-    id: 'sd-b1',
+    id: 'sy-b1',
     topicId: 'poly-synthetic-division',
     difficulty: 'beginner',
     prompt: 'Use synthetic division to divide $f(x)=x^3-2x^2+3x-5$ by $(x-2)$. Find the remainder.',
@@ -192,7 +192,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$f(x)=x^3-2x^2+3x-5$', '$f(2)=1$', 'Remainder $=1$'],
   },
   {
-    id: 'sd-b2',
+    id: 'sy-b2',
     topicId: 'poly-synthetic-division',
     difficulty: 'beginner',
     prompt: 'Use synthetic division to divide $f(x)=2x^3+x^2-5x+3$ by $(x+1)$. Find the remainder.',
@@ -204,7 +204,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$f(x)=2x^3+x^2-5x+3$', '$f(-1)=7$', 'Remainder $=7$'],
   },
   {
-    id: 'sd-i1',
+    id: 'sy-i1',
     topicId: 'poly-synthetic-division',
     difficulty: 'intermediate',
     prompt: 'Use synthetic division to divide $f(x)=x^4-3x^3+2x-8$ by $(x-3)$. Find the remainder.',
@@ -216,7 +216,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$f(x)=x^4-3x^3+2x-8$', '$f(3)=-2$'],
   },
   {
-    id: 'sd-a1',
+    id: 'sy-a1',
     topicId: 'poly-synthetic-division',
     difficulty: 'advanced',
     prompt: 'Use synthetic division to divide $f(x)=3x^4-2x^3+x-4$ by $(x+2)$. Find the remainder.',
@@ -332,7 +332,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- poly-descartes-rule ----------
   {
-    id: 'dr-b1',
+    id: 'ds-b1',
     topicId: 'poly-descartes-rule',
     difficulty: 'beginner',
     prompt: 'How many sign changes occur in the coefficients of $f(x) = x^3 - 2x^2 - 5x + 6$, read in order?',
@@ -344,7 +344,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$f(x)=x^3-2x^2-5x+6$', 'Coefficient signs: $+,-,-,+$', '2 sign changes'],
   },
   {
-    id: 'dr-b2',
+    id: 'ds-b2',
     topicId: 'poly-descartes-rule',
     difficulty: 'beginner',
     prompt: 'The polynomial in the previous problem, $f(x) = x^3 - 2x^2 - 5x + 6$, has 2 sign changes. What are the possible numbers of positive real zeros?',
@@ -362,7 +362,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['2 sign changes', 'Possible positive real zeros: $2$ or $0$'],
   },
   {
-    id: 'dr-i1',
+    id: 'ds-i1',
     topicId: 'poly-descartes-rule',
     difficulty: 'intermediate',
     prompt: 'How many sign changes occur in the coefficients of $f(x) = 2x^4 - 3x^3 - x^2 + 3x - 1$?',
@@ -374,7 +374,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$f(x)=2x^4-3x^3-x^2+3x-1$', 'Coefficient signs: $+,-,-,+,-$', '3 sign changes'],
   },
   {
-    id: 'dr-a1',
+    id: 'ds-a1',
     topicId: 'poly-descartes-rule',
     difficulty: 'advanced',
     prompt: 'For $f(x) = x^4 - x^3 - x + 1$, find $f(-x)$ and count its sign changes to determine the possible number(s) of negative real zeros.',

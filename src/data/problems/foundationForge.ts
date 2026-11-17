@@ -966,7 +966,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- circles ----------
   {
-    id: 'ci-b1',
+    id: 'ce-b1',
     topicId: 'circles',
     difficulty: 'beginner',
     prompt: 'Find the radius of the circle $(x-1)^2+(y+4)^2=49$.',
@@ -978,7 +978,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Radius $=7$'],
   },
   {
-    id: 'ci-b2',
+    id: 'ce-b2',
     topicId: 'circles',
     difficulty: 'beginner',
     prompt: 'Find the center of the circle $(x+2)^2+(y-5)^2=16$. Enter as $a+bi$, where $a$ is the $x$-coordinate and $b$ is the $y$-coordinate.',
@@ -990,7 +990,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Center $=(-2,5)$'],
   },
   {
-    id: 'ci-i1',
+    id: 'ce-i1',
     topicId: 'circles',
     difficulty: 'intermediate',
     prompt: 'A circle has center $(0,0)$ and passes through the point $(6,8)$. Find its radius.',
@@ -1002,7 +1002,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Radius $=10$'],
   },
   {
-    id: 'ci-a1',
+    id: 'ce-a1',
     topicId: 'circles',
     difficulty: 'advanced',
     prompt: 'Find the radius of the circle $x^2+y^2-6x+4y-12=0$ by completing the square.',

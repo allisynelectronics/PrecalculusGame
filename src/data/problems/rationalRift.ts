@@ -307,7 +307,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- rf-partial-fractions ----------
   {
-    id: 'pf-b1',
+    id: 'pt-b1',
     topicId: 'rf-partial-fractions',
     difficulty: 'beginner',
     prompt: 'Decompose into partial fractions: $\\dfrac{5x+3}{(x-1)(x+3)}$',
@@ -320,7 +320,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$\\frac{5x+3}{(x-1)(x+3)}$', '$=\\frac{A}{x-1}+\\frac{B}{x+3}$', '$=\\frac{2}{x-1}+\\frac{3}{x+3}$'],
   },
   {
-    id: 'pf-b2',
+    id: 'pt-b2',
     topicId: 'rf-partial-fractions',
     difficulty: 'beginner',
     prompt: 'Decompose into partial fractions: $\\dfrac{2x-1}{(x+2)(x-3)}$',
@@ -333,7 +333,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$\\frac{2x-1}{(x+2)(x-3)}$', '$=\\frac{A}{x+2}+\\frac{B}{x-3}$', '$=\\frac{1}{x+2}+\\frac{1}{x-3}$'],
   },
   {
-    id: 'pf-i1',
+    id: 'pt-i1',
     topicId: 'rf-partial-fractions',
     difficulty: 'intermediate',
     prompt: 'Decompose into partial fractions: $\\dfrac{6x-6}{(x-2)(x+4)}$',
@@ -346,7 +346,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$\\frac{6x-6}{(x-2)(x+4)}$', '$=\\frac{A}{x-2}+\\frac{B}{x+4}$', '$=\\frac{1}{x-2}+\\frac{5}{x+4}$'],
   },
   {
-    id: 'pf-a1',
+    id: 'pt-a1',
     topicId: 'rf-partial-fractions',
     difficulty: 'advanced',
     prompt: 'Decompose into partial fractions: $\\dfrac{x-17}{(x+1)(x-5)}$',
@@ -361,7 +361,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- rf-polynomial-inequalities ----------
   {
-    id: 'pi-b1',
+    id: 'pn-b1',
     topicId: 'rf-polynomial-inequalities',
     difficulty: 'beginner',
     prompt: 'Solve and write in interval notation: $(x-2)(x+3) > 0$',
@@ -373,7 +373,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$(x-2)(x+3)>0$', 'Solution: $(-\\infty,-3)\\cup(2,\\infty)$'],
   },
   {
-    id: 'pi-b2',
+    id: 'pn-b2',
     topicId: 'rf-polynomial-inequalities',
     difficulty: 'beginner',
     prompt: 'Solve and write in interval notation: $(x-1)(x-5) < 0$',
@@ -385,7 +385,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$(x-1)(x-5)<0$', 'Solution: $(1,5)$'],
   },
   {
-    id: 'pi-i1',
+    id: 'pn-i1',
     topicId: 'rf-polynomial-inequalities',
     difficulty: 'intermediate',
     prompt: 'Solve and write in interval notation: $x^2 - x - 6 \\ge 0$',
@@ -397,7 +397,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$x^2-x-6\\ge0$', 'Solution: $(-\\infty,-2]\\cup[3,\\infty)$'],
   },
   {
-    id: 'pi-a1',
+    id: 'pn-a1',
     topicId: 'rf-polynomial-inequalities',
     difficulty: 'advanced',
     prompt: 'Solve and write in interval notation: $x^3 - 4x < 0$',

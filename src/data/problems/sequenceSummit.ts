@@ -53,7 +53,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- arithmetic-sequences ----------
   {
-    id: 'as-b1',
+    id: 'aq-b1',
     topicId: 'arithmetic-sequences',
     difficulty: 'beginner',
     prompt: 'Find the common difference of $5,9,13,17,\\ldots$',
@@ -65,7 +65,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$d=4$'],
   },
   {
-    id: 'as-b2',
+    id: 'aq-b2',
     topicId: 'arithmetic-sequences',
     difficulty: 'beginner',
     prompt: 'Find the 20th term of the arithmetic sequence with $a_1=7$, $d=3$.',
@@ -77,7 +77,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$a_{20}=64$'],
   },
   {
-    id: 'as-i1',
+    id: 'aq-i1',
     topicId: 'arithmetic-sequences',
     difficulty: 'intermediate',
     prompt: 'In an arithmetic sequence, $a_1=-5$ and $a_{10}=22$. Find the common difference $d$.',
@@ -89,7 +89,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$d=3$'],
   },
   {
-    id: 'as-a1',
+    id: 'aq-a1',
     topicId: 'arithmetic-sequences',
     difficulty: 'advanced',
     prompt: 'In an arithmetic sequence, $a_5=14$ and $a_{12}=35$. Find $a_1$.',

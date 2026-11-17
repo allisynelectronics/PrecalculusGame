@@ -62,7 +62,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- average-rate-of-change ----------
   {
-    id: 'ar-b1',
+    id: 'rc-b1',
     topicId: 'average-rate-of-change',
     difficulty: 'beginner',
     prompt: 'For $f(x)=x^2$, find the average rate of change on $[1,4]$.',
@@ -74,7 +74,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Average rate of change $=5$'],
   },
   {
-    id: 'ar-b2',
+    id: 'rc-b2',
     topicId: 'average-rate-of-change',
     difficulty: 'beginner',
     prompt: 'For $f(x)=2x+3$, find the average rate of change on $[0,5]$.',
@@ -86,7 +86,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Average rate of change $=2$'],
   },
   {
-    id: 'ar-i1',
+    id: 'rc-i1',
     topicId: 'average-rate-of-change',
     difficulty: 'intermediate',
     prompt: 'For $f(x)=x^3$, find the average rate of change on $[-1,2]$.',
@@ -98,7 +98,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Average rate of change $=3$'],
   },
   {
-    id: 'ar-a1',
+    id: 'rc-a1',
     topicId: 'average-rate-of-change',
     difficulty: 'advanced',
     prompt: 'For $f(x)=\\sqrt{x}$, find the average rate of change on $[1,9]$.',

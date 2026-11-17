@@ -8,7 +8,7 @@ const SIGN_CHOICES = [
 export const PROBLEMS: Problem[] = [
   // ---------- trig-angle-basics ----------
   {
-    id: 'ab-b1',
+    id: 'tg-b1',
     topicId: 'trig-angle-basics',
     difficulty: 'beginner',
     prompt: 'Convert $150°$ to radians (exact value).',
@@ -20,7 +20,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$150°$', '$=\\frac{5\\pi}{6}$ rad'],
   },
   {
-    id: 'ab-b2',
+    id: 'tg-b2',
     topicId: 'trig-angle-basics',
     difficulty: 'beginner',
     prompt: 'Convert $\\dfrac{7\\pi}{6}$ radians to degrees.',
@@ -32,7 +32,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$\\frac{7\\pi}{6}$ rad', '$=210°$'],
   },
   {
-    id: 'ab-i1',
+    id: 'tg-i1',
     topicId: 'trig-angle-basics',
     difficulty: 'intermediate',
     prompt: 'Find a positive coterminal angle with $-50°$.',
@@ -44,7 +44,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$-50°+360°=310°$'],
   },
   {
-    id: 'ab-a1',
+    id: 'tg-a1',
     topicId: 'trig-angle-basics',
     difficulty: 'advanced',
     prompt: 'Find a negative coterminal angle with $400°$ that lies strictly between $-360°$ and $0°$.',
@@ -56,7 +56,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$400°-720°=-320°$'],
   },
   {
-    id: 'ab-i2',
+    id: 'tg-i2',
     topicId: 'trig-angle-basics',
     difficulty: 'intermediate',
     prompt: 'Convert $\\dfrac{5\\pi}{4}$ radians to degrees.',
@@ -68,7 +68,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$\\frac{5\\pi}{4}$ rad', '$=225°$'],
   },
   {
-    id: 'ab-a2',
+    id: 'tg-a2',
     topicId: 'trig-angle-basics',
     difficulty: 'advanced',
     prompt: 'Find a positive coterminal angle with $-200°$ that lies strictly between $0°$ and $360°$.',
@@ -82,7 +82,7 @@ export const PROBLEMS: Problem[] = [
 
   // ---------- trig-reference-angles ----------
   {
-    id: 'ra-b1',
+    id: 'rg-b1',
     topicId: 'trig-reference-angles',
     difficulty: 'beginner',
     prompt: 'Find the reference angle for $150°$.',
@@ -94,7 +94,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Reference angle of $150°$ is $30°$'],
   },
   {
-    id: 'ra-b2',
+    id: 'rg-b2',
     topicId: 'trig-reference-angles',
     difficulty: 'beginner',
     prompt: 'Find the reference angle for $225°$.',
@@ -106,7 +106,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Reference angle of $225°$ is $45°$'],
   },
   {
-    id: 'ra-i1',
+    id: 'rg-i1',
     topicId: 'trig-reference-angles',
     difficulty: 'intermediate',
     prompt: 'What is the sign of $\\sin(200°)$?',
@@ -119,7 +119,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$\\sin(200°) < 0$'],
   },
   {
-    id: 'ra-a1',
+    id: 'rg-a1',
     topicId: 'trig-reference-angles',
     difficulty: 'advanced',
     prompt: 'What is the sign of $\\cos(300°)\\cdot\\tan(300°)$?',
@@ -132,7 +132,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['$\\cos(300°)\\cdot\\tan(300°) < 0$'],
   },
   {
-    id: 'ra-i2',
+    id: 'rg-i2',
     topicId: 'trig-reference-angles',
     difficulty: 'intermediate',
     prompt: 'Find the reference angle for $300°$.',
@@ -144,7 +144,7 @@ export const PROBLEMS: Problem[] = [
     worked: ['Reference angle of $300°$ is $60°$'],
   },
   {
-    id: 'ra-a2',
+    id: 'rg-a2',
     topicId: 'trig-reference-angles',
     difficulty: 'advanced',
     prompt: 'What is the sign of $\\sin(100°)\\cdot\\cos(100°)$?',
