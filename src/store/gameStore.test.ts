@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // This Node build (v25.6.1 here) defines a global `localStorage` that is NOT a real
 // Storage implementation — it has no getItem/setItem/clear, just Object.prototype —
@@ -200,6 +200,51 @@ describe('mastery progression algorithm (recordAttempt)', () => {
     attempt('beta', true);
     expect(useGameStore.getState().mastery.alpha.level).toBe(3);
     expect(useGameStore.getState().mastery.beta.level).toBe(2);
+  });
+});
+
+describe('spaced-repetition scheduling (recordAttempt)', () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const attempt = (topicId: string, correct: boolean) =>
+    useGameStore.getState().recordAttempt({ problemId: 'p', topicId, correct, usedHint: false, timestamp: 0 });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('sets lastReviewedAt to the attempt time on every attempt', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1_000_000);
+    attempt('t', true);
+    expect(useGameStore.getState().mastery.t.lastReviewedAt).toBe(1_000_000);
+  });
+
+  it('schedules the next review using the NEW level\'s interval on a correct answer', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    attempt('t', true); // level 1 -> 2, interval 1 day
+    expect(useGameStore.getState().mastery.t.nextReviewAt).toBe(1 * DAY_MS);
+  });
+
+  it('schedules review immediately (now) on a wrong answer, regardless of level', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    for (let i = 0; i < 6; i++) attempt('t', true); // level 5
+    vi.setSystemTime(5000);
+    attempt('t', false); // wrong -> due right now, not on the usual schedule
+    expect(useGameStore.getState().mastery.t.nextReviewAt).toBe(5000);
+  });
+
+  it('schedules a longer interval for a higher mastery level (mastered = 14 days out)', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    for (let i = 0; i < 6; i++) attempt('t', true); // level 5 ("Mastered") after a 6-streak
+    expect(useGameStore.getState().mastery.t.level).toBe(5);
+    expect(useGameStore.getState().mastery.t.nextReviewAt).toBe(14 * DAY_MS);
+  });
+
+  it('starts with no review schedule until the topic has been attempted', () => {
+    expect(useGameStore.getState().mastery['never-attempted']).toBeUndefined();
   });
 });
 

@@ -18,37 +18,42 @@ item ships or a new one is identified; don't let it drift out of sync with reali
   ID-based lookup).
 - Added **Free Practice mode**: pick any topic from any world directly (bypasses the
   board-unlock gating on purpose — practice access shouldn't be rationed), with a
-  "Needs Practice" shortcut that surfaces the player's lowest-mastery topics and a
   "practice again" shortcut for the last-practiced topic. Reuses the existing
   problem-solving UI (hints, explain, break-it-down, mastery tracking, rewards)
   entirely — no duplicated logic.
 - Fixed a pre-existing HUD overflow bug on narrow (phone-width) screens, found while
   testing Free Practice.
+- Added a real **spaced-repetition Weakness Workshop** inside Free Practice. Each
+  mastery record now tracks `lastReviewedAt` and `nextReviewAt`; a correct answer
+  schedules the next review using the interval for the *new* mastery level (1 day at
+  "Learning" up to 14 days at "Mastered" — longer gaps as mastery grows, the standard
+  spaced-repetition shape), while a wrong answer schedules review immediately rather
+  than on the usual schedule. The Workshop surfaces only topics that are actually due,
+  most-overdue first, and — per the original brief's "routes students to missing
+  prerequisites automatically" — flags when a due topic's prerequisite is itself weak
+  or unattempted, with a one-click shortcut to review that first.
 
 ## Next up — ranked by learning impact
 
-1. **Spaced-repetition "Weakness Workshop".** Free Practice's "Needs Practice" list is
-   a first step (lowest mastery level, surfaced on demand) but it's not spaced
-   repetition — it doesn't track *when* a topic was last reviewed or resurface it on a
-   schedule (e.g. 1 day / 3 days / 7 days / 14 days after the last correct answer).
-   Spaced retrieval practice is one of the most evidence-backed interventions in
-   learning science; this is the highest-leverage thing left to build. Needs: a
-   `lastReviewedAt` timestamp per topic in the mastery record, and a scheduling
-   function that ranks "due" topics instead of just sorting by raw mastery level.
-2. **Exam Simulator.** A timed, mixed-topic, no-hints assessment mode that mimics real
+1. **Exam Simulator.** A timed, mixed-topic, no-hints assessment mode that mimics real
    test conditions — useful specifically because Free Practice and board play both
    allow infinite retries and hints, which is good for *learning* but doesn't build
    the test-taking calibration (pacing, no safety net) a retake actually needs.
-3. **Difficulty selection in Free Practice.** Right now Free Practice auto-picks
+2. **Difficulty selection in Free Practice.** Right now Free Practice auto-picks
    difficulty from the player's current mastery level, same as board play. Letting the
    player explicitly choose beginner/intermediate/advanced would let them deliberately
    push into harder material instead of waiting for the mastery algorithm to offer it.
-4. **Study-habit visibility.** A visible daily/weekly practice streak and a "topics
+3. **Study-habit visibility.** A visible daily/weekly practice streak and a "topics
    mastered this week" trend on the Dashboard. Self-monitoring is a well-established
    lever for maintaining a study habit, especially over a semester-long retake.
-5. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
+4. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
    real screen reader (NVDA/JAWS/VoiceOver) or keyboard-only navigation pass. Automated
    tools catch a real but partial subset of issues.
+5. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
+   reasonable first cut, not tuned against real usage data. Worth revisiting once there's
+   enough attempt history to see whether topics are being resurfaced too early/late in
+   practice. The "due" list is also currently capped at 8 topics with no way to see more
+   if more are overdue.
 
 ## Lower priority
 

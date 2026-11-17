@@ -1,16 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { getTopic, TOPICS } from '../data/topics';
 import { WORLDS } from '../data/worlds';
 import { useGameStore } from '../store/gameStore';
-import { MASTERY_NAMES, type MasteryLevel } from '../types';
+import { MASTERY_NAMES } from '../types';
 
-const MASTERY_COLOR: Record<MasteryLevel, string> = {
-  1: 'bg-gray-500',
-  2: 'bg-rose-500',
-  3: 'bg-amber-500',
-  4: 'bg-cyan-500',
-  5: 'bg-emerald-500',
-};
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function formatDue(nextReviewAt: number | null | undefined, now: number): string {
+  if (!nextReviewAt) return 'Due now'; // null/undefined — e.g. mastery saved before this field existed
+  const overdueDays = Math.floor((now - nextReviewAt) / DAY_MS);
+  if (overdueDays <= 0) return 'Due today';
+  if (overdueDays === 1) return 'Overdue by 1 day';
+  return `Overdue by ${overdueDays} days`;
+}
 
 export function FreePractice() {
   const { mastery, lastPracticeTopicId, startProblem, setScreen } = useGameStore();
@@ -19,20 +21,21 @@ export function FreePractice() {
   const lastWorld = lastTopic ? WORLDS.find((w) => w.id === lastTopic.worldId) : undefined;
 
   const [selectedWorldId, setSelectedWorldId] = useState<string | null>(lastTopic?.worldId ?? null);
+  // Snapshot "now" once per mount (not on every render) — this screen remounts fresh
+  // each time the player returns from a problem, so the due list still stays current
+  // across practice rounds without calling the impure Date.now() during render itself.
+  const [now] = useState(() => Date.now());
 
-  // Surfaces the topics most worth practicing right now: lowest mastery level first,
-  // then lowest accuracy — only among topics the player has actually attempted, since
-  // "never tried" isn't the same signal as "struggling with."
-  const weakestTopics = useMemo(() => {
-    return TOPICS.filter((t) => mastery[t.id])
-      .map((t) => {
-        const m = mastery[t.id];
-        return { topic: t, level: m.level, accuracy: m.attempts === 0 ? 0 : m.correct / m.attempts };
-      })
-      .filter((x) => x.level < 5)
-      .sort((a, b) => a.level - b.level || a.accuracy - b.accuracy)
-      .slice(0, 5);
-  }, [mastery]);
+  // The Weakness Workshop: real spaced-repetition review, not just "lowest mastery."
+  // Only topics the player has actually attempted enter the schedule at all; a topic
+  // becomes due when its stored nextReviewAt has passed (or is missing — treated as
+  // due now, e.g. for mastery data saved before this field existed). Most-overdue
+  // first, capped to keep the list focused rather than overwhelming.
+  const dueTopics = TOPICS.filter((t) => mastery[t.id])
+    .map((t) => ({ topic: t, m: mastery[t.id] }))
+    .filter(({ m }) => (m.nextReviewAt ?? 0) <= now)
+    .sort((a, b) => (a.m.nextReviewAt ?? 0) - (b.m.nextReviewAt ?? 0))
+    .slice(0, 8);
 
   const selectedWorld = WORLDS.find((w) => w.id === selectedWorldId);
   const worldTopics = selectedWorldId ? TOPICS.filter((t) => t.worldId === selectedWorldId) : [];
@@ -71,31 +74,53 @@ export function FreePractice() {
           </div>
         )}
 
-        {weakestTopics.length > 0 && (
-          <div className="mb-6">
-            <h2 className="font-display text-lg text-amber-200 mb-2">⚠️ Needs Practice</h2>
+        <div className="mb-6">
+          <h2 className="font-display text-lg text-amber-200 mb-1">🔬 Weakness Workshop</h2>
+          <p className="text-purple-400 text-xs mb-2">
+            Spaced review: topics you've already practiced, resurfaced on schedule — sooner for weaker topics, later for strong ones.
+          </p>
+
+          {dueTopics.length === 0 ? (
+            <div className="bg-black/30 border border-purple-400/20 rounded-xl px-4 py-3 text-purple-300 text-sm">
+              Nothing due for review right now — nice work! Pick a world below to practice ahead of schedule, or check back later.
+            </div>
+          ) : (
             <div className="space-y-2">
-              {weakestTopics.map(({ topic, level }) => {
+              {dueTopics.map(({ topic, m }) => {
                 const world = WORLDS.find((w) => w.id === topic.worldId);
+                const prereq = topic.prerequisite ? getTopic(topic.prerequisite) : undefined;
+                const prereqWeak = prereq && (mastery[prereq.id]?.level ?? 1) <= 2;
                 return (
-                  <button
-                    key={topic.id}
-                    onClick={() => practice(topic.id)}
-                    className="w-full flex items-center justify-between bg-black/40 border border-purple-400/30 rounded-xl px-4 py-2.5 hover:bg-purple-500/10 text-left"
-                  >
-                    <div className="min-w-0">
-                      <span className="text-purple-100 text-sm">{topic.name}</span>
-                      <span className="text-purple-500 text-xs ml-2">{world?.name}</span>
-                    </div>
-                    <span className={`shrink-0 text-[10px] px-2 py-0.5 rounded-full text-black font-semibold ${MASTERY_COLOR[level]}`}>
-                      {MASTERY_NAMES[level]}
-                    </span>
-                  </button>
+                  <div key={topic.id} className="bg-black/40 border border-purple-400/30 rounded-xl overflow-hidden">
+                    <button
+                      onClick={() => practice(topic.id)}
+                      className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-purple-500/10 text-left"
+                    >
+                      <div className="min-w-0">
+                        <span className="text-purple-100 text-sm">{topic.name}</span>
+                        <span className="text-purple-500 text-xs ml-2">{world?.name}</span>
+                      </div>
+                      <span className="shrink-0 text-[10px] px-2 py-0.5 rounded-full bg-rose-500/80 text-black font-semibold ml-3">
+                        {formatDue(m.nextReviewAt, now)}
+                      </span>
+                    </button>
+                    {prereqWeak && prereq && (
+                      <div className="px-4 pb-2 -mt-1 text-xs text-amber-300 flex items-center gap-1 flex-wrap">
+                        <span>⚠️ Shaky on the prerequisite —</span>
+                        <button
+                          onClick={() => practice(prereq.id)}
+                          className="underline hover:text-amber-200 font-semibold"
+                        >
+                          review {prereq.name} first
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
         <h2 className="font-display text-lg text-amber-200 mb-2">Choose a World</h2>
         <div className="flex flex-wrap gap-2 mb-5">

@@ -6,11 +6,13 @@ import type { AttemptRecord, Character, MasteryLevel, Screen, SpaceType } from '
 const SAVE_KEY = 'mathverse-save';
 const SCHEMA_VERSION = 1;
 
-interface TopicMastery {
+export interface TopicMastery {
   level: MasteryLevel;
   correctStreak: number;
   attempts: number;
   correct: number;
+  lastReviewedAt: number | null; // ms epoch of the most recent attempt (correct or not)
+  nextReviewAt: number | null; // ms epoch this topic is next due for spaced-repetition review
 }
 
 interface GameState {
@@ -177,8 +179,16 @@ function initMastery(): Record<string, TopicMastery> {
   return {};
 }
 
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+// Spaced-repetition review interval per mastery level, in days. Higher mastery means a
+// longer gap before the topic is due again — the standard spaced-repetition shape.
+// Level 1 ("New") has no interval: a topic only enters the review schedule once it's
+// been attempted at least once (see TopicMastery.nextReviewAt).
+const REVIEW_INTERVAL_DAYS: Record<MasteryLevel, number> = { 1: 0, 2: 1, 3: 3, 4: 7, 5: 14 };
+
 function updateMastery(m: TopicMastery | undefined, correct: boolean): TopicMastery {
-  const base: TopicMastery = m ?? { level: 1, correctStreak: 0, attempts: 0, correct: 0 };
+  const base: TopicMastery = m ?? { level: 1, correctStreak: 0, attempts: 0, correct: 0, lastReviewedAt: null, nextReviewAt: null };
   const attempts = base.attempts + 1;
   const correctCount = base.correct + (correct ? 1 : 0);
   const correctStreak = correct ? base.correctStreak + 1 : 0;
@@ -191,7 +201,12 @@ function updateMastery(m: TopicMastery | undefined, correct: boolean): TopicMast
   } else if (level > 2) {
     level = (level - 1) as MasteryLevel;
   }
-  return { level, correctStreak, attempts, correct: correctCount };
+  const now = Date.now();
+  // A correct answer schedules the next review using the NEW level's interval. A wrong
+  // answer schedules review immediately — a miss means this needs reinforcement now,
+  // not on the usual schedule.
+  const nextReviewAt = correct ? now + REVIEW_INTERVAL_DAYS[level] * MS_PER_DAY : now;
+  return { level, correctStreak, attempts, correct: correctCount, lastReviewedAt: now, nextReviewAt };
 }
 
 export const useGameStore = create<GameState>()(
