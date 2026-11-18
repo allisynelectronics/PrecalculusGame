@@ -119,6 +119,7 @@ export function UnitCircleExplorer() {
                 <button
                   key={a}
                   onClick={() => setAngleDeg(a)}
+                  aria-pressed={angle === a}
                   className={`px-2 py-1 rounded text-xs border ${
                     angle === a ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'
                   }`}

@@ -62,6 +62,7 @@ export function PascalsTriangleExplorer() {
                   <button
                     key={k}
                     onClick={() => setHighlightRow(n)}
+                    aria-pressed={n === hRow}
                     className={`w-9 h-9 flex items-center justify-center rounded-md text-xs font-mono border transition-colors ${
                       n === hRow
                         ? 'bg-amber-500 text-black border-amber-300 font-bold'

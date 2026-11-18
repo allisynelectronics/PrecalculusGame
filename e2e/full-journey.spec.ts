@@ -84,7 +84,10 @@ test.describe('full player journey', () => {
     // shortcut above, so the topic name may appear twice on the page.
     await expect(page.getByText('Integer Operations & Order of Operations').first()).toBeVisible();
 
-    const practiceButtons = page.getByRole('button', { name: 'Practice', exact: true });
+    // Each per-topic Practice button now has an explicit "Practice <topic name>"
+    // accessible label (fixed during the accessibility pass — plain "Practice" was
+    // ambiguous when announced out of visual context), so match that pattern.
+    const practiceButtons = page.getByRole('button', { name: /^Practice / });
     await practiceButtons.first().click();
 
     // First encounter with a topic shows the "Discover" stage before the solve stage.

@@ -143,6 +143,7 @@ export function TrigWaveVisualizer() {
                 <button
                   key={k}
                   onClick={() => setFnKind(k)}
+                  aria-pressed={fnKind === k}
                   className={`flex-1 px-3 py-1.5 rounded-full text-sm border ${
                     fnKind === k ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'
                   }`}

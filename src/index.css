@@ -17,6 +17,17 @@ html, body, #root {
   box-sizing: border-box;
 }
 
+/* The browser's default keyboard-focus ring doesn't render visibly against this
+   theme's dark background and gradient buttons (confirmed via a keyboard-only pass —
+   :focus-visible matches, but nothing is perceptible). Replace it with an explicit,
+   high-contrast ring everywhere. Elements that already define their own focus style
+   (e.g. text inputs using focus:border-amber-400) keep that instead, since Tailwind's
+   focus:outline-none utility has higher specificity than this bare pseudo-class. */
+:focus-visible {
+  outline: 3px solid #fbbf24;
+  outline-offset: 3px;
+}
+
 .font-display {
   font-family: 'Georgia', 'Times New Roman', serif;
 }

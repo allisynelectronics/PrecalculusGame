@@ -185,7 +185,7 @@ export function BossBattle() {
             <>
               <AnswerInput key={problem.id} problem={problem} onSubmit={handleSubmit} />
               {status === 'wrong' && (
-                <div className="mt-3 p-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-sm text-rose-200 animate-shake">
+                <div role="status" aria-live="polite" className="mt-3 p-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-sm text-rose-200 animate-shake">
                   The boss strikes back! <MathText text={problem.hints[0] ?? 'Try again.'} />
                 </div>
               )}
@@ -204,7 +204,7 @@ export function BossBattle() {
           )}
 
           {status === 'correct' && (
-            <div className="text-center py-2 animate-pop">
+            <div role="status" aria-live="polite" className="text-center py-2 animate-pop">
               <div className="text-3xl mb-1">💥</div>
               <p className="text-emerald-300 font-semibold">A direct hit!</p>
             </div>

@@ -97,6 +97,7 @@ export function AnswerInput({
               key={i}
               disabled={disabled}
               onClick={() => setRepairLine(i)}
+              aria-pressed={repairLine === i}
               className={`block w-full text-left px-2 py-1 rounded ${
                 repairLine === i ? 'bg-rose-500/40 border border-rose-300' : 'hover:bg-purple-500/20'
               }`}

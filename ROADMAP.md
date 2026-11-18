@@ -56,13 +56,38 @@ item ships or a new one is identified; don't let it drift out of sync with reali
   reached "Proficient" mastery or higher in the last 7 days. `TopicMastery` gained a
   `masteredAt` timestamp (set once, kept even if the level later decays) to make the
   "mastered this week" trend possible without replaying attempt history.
+- Did a **keyboard-only navigation pass** (tabbing through every major screen with no
+  mouse) and fixed everything real it turned up — this is NOT the same as real
+  screen-reader-user testing (see "Known limitations" below), but it's genuine,
+  verified coverage beyond axe-core alone:
+  - The browser's default keyboard-focus ring wasn't rendering *visibly* anywhere in
+    the app (confirmed via screenshot — `:focus-visible` matched, nothing was
+    perceptible against the dark/gradient theme). Fixed with one global, high-contrast
+    `:focus-visible` rule in `index.css` rather than patching every button.
+  - Added a "Skip to main content" link (visible only once focused) so keyboard users
+    don't have to re-tab through the same 5-6-button nav bar on every single screen.
+  - Several buttons had no real accessible name at all for a screen reader to announce
+    (hero-select cards, world cards, exam-length cards — all multi-line button content
+    that wasn't being exposed as a name) or an ambiguous one (every per-topic "Practice"
+    button in Free Practice announced as just "Practice," indistinguishable from the
+    others in a screen-reader elements list). Fixed with explicit `aria-label`s, or by
+    aria-hiding flavor text that was never meant to be the name in the first place.
+  - This surfaced a second, non-obvious correctness bar: WCAG 2.5.3 "Label in Name" —
+    axe-core caught two of the `aria-label` fixes above because the label didn't
+    literally contain the visible text (a colon I'd added wasn't actually in the
+    rendered DOM text), which breaks voice-control software that says "click
+    <visible label>". Both were corrected and re-verified with axe.
+  - Added `aria-pressed`/`aria-current` to every toggle-style button (difficulty/length
+    pickers, world pickers, lab-explorer mode selectors, HUD nav) so screen readers can
+    tell what's currently selected, not just that a button exists.
+  - Added `aria-live="polite"` regions for the correct/incorrect/skipped feedback in
+    ProblemView, BossBattle, and the Exam Simulator, and for the Exam Simulator's
+    question counter — but deliberately NOT for its per-second countdown timer, since
+    announcing every tick would be disruptive rather than helpful.
 
 ## Next up — ranked by learning impact
 
-1. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
-   real screen reader (NVDA/JAWS/VoiceOver) or keyboard-only navigation pass. Automated
-   tools catch a real but partial subset of issues.
-2. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
+1. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
    reasonable first cut, not tuned against real usage data. Worth revisiting once there's
    enough attempt history to see whether topics are being resurfaced too early/late in
    practice. The "due" list is also currently capped at 8 topics with no way to see more
@@ -101,3 +126,11 @@ item ships or a new one is identified; don't let it drift out of sync with reali
   which is capped to the most recent 200 records. At normal practice volume this is a
   non-issue, but an extremely heavy practice day (200+ problems) could push older days
   out of the window and undercount a longer streak.
+- The keyboard-only pass (above) is real but partial coverage — it's not a substitute
+  for an actual screen-reader user (NVDA/JAWS/VoiceOver) going through the app. That
+  kind of testing catches things a sighted keyboard-only pass structurally can't: how
+  verbose/confusing something actually *sounds*, whether the reading order makes sense,
+  and whether the genuinely visual interactive labs (drag-a-slider-watch-a-graph-move —
+  Unit Circle Explorer, Vector Simulator, Polar Grapher, etc.) have any usable
+  non-visual equivalent at all, which right now they don't. Worth doing with a real
+  user if this app is ever shared beyond one person.

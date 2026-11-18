@@ -122,6 +122,7 @@ export function ObliqueTriangleSolver() {
             <button
               key={k}
               onClick={() => setKind(k)}
+              aria-pressed={kind === k}
               className={`px-4 py-1.5 rounded-full text-sm border ${
                 kind === k ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'
               }`}

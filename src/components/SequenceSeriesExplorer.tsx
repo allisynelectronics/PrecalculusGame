@@ -83,6 +83,7 @@ export function SequenceSeriesExplorer() {
             <button
               key={kd}
               onClick={() => setKind(kd)}
+              aria-pressed={kind === kd}
               className={`px-4 py-1.5 rounded-full text-sm border capitalize ${kind === kd ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'}`}
             >
               {kd}

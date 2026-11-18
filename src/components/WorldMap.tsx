@@ -31,10 +31,15 @@ export function WorldMap() {
                   background: `linear-gradient(135deg, ${w.colorFrom}, ${w.colorTo})`,
                 }}
               >
+                {/* The tagline and boss name are flavor text, not functional information
+                    (the unlock-status badges below already convey what matters) — hiding
+                    them from the accessible name keeps each card's spoken name to "World
+                    N, <name>" plus its real status, instead of a whole paragraph read out
+                    on every single Tab stop across 13 cards. */}
                 <div className="text-xs uppercase tracking-wider text-white/60">World {w.index}</div>
                 <div className="font-display text-xl text-white mt-1">{w.name}</div>
-                <div className="text-sm text-white/80 mt-1 italic">{w.tagline}</div>
-                <div className="mt-3 text-xs text-white/60">Boss: {w.boss}</div>
+                <div aria-hidden="true" className="text-sm text-white/80 mt-1 italic">{w.tagline}</div>
+                <div aria-hidden="true" className="mt-3 text-xs text-white/60">Boss: {w.boss}</div>
                 {!underDevelopment && w.partial && (
                   <div className="mt-1 inline-block text-[10px] text-amber-200/90 bg-black/30 rounded-full px-2 py-0.5">
                     ⚒️ Core curriculum — more topics coming

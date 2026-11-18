@@ -74,6 +74,7 @@ export function FreePractice() {
               <button
                 key={opt.value}
                 onClick={() => setPracticeDifficulty(opt.value)}
+                aria-pressed={practiceDifficulty === opt.value}
                 className={`px-3 py-1.5 rounded-full border text-sm ${
                   practiceDifficulty === opt.value
                     ? 'bg-amber-500/30 border-amber-400/60 text-amber-200'
@@ -161,6 +162,7 @@ export function FreePractice() {
             <button
               key={w.id}
               onClick={() => setSelectedWorldId(w.id)}
+              aria-pressed={selectedWorldId === w.id}
               className={`px-3 py-1.5 rounded-full border text-sm ${
                 selectedWorldId === w.id
                   ? 'bg-purple-500/30 border-amber-400/60 text-amber-200'
@@ -187,6 +189,7 @@ export function FreePractice() {
                     </div>
                     <button
                       onClick={() => practice(t.id)}
+                      aria-label={`Practice ${t.name}`}
                       className="shrink-0 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-fuchsia-500 text-black font-bold text-xs"
                     >
                       Practice

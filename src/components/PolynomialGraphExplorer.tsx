@@ -130,6 +130,7 @@ export function PolynomialGraphExplorer() {
                       <button
                         key={m}
                         onClick={() => updateZero(i, { mult: m })}
+                        aria-pressed={z.mult === m}
                         className={`px-2 py-0.5 rounded text-[10px] border ${z.mult === m ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-300'}`}
                       >
                         mult. {m}

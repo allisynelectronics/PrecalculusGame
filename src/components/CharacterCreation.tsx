@@ -37,6 +37,8 @@ export function CharacterCreation() {
           <button
             key={a.id}
             onClick={() => setSelected(a.id)}
+            aria-pressed={selected === a.id}
+            aria-label={a.title}
             className={`rounded-xl p-4 border-2 transition-all bg-gradient-to-br ${a.colorClass} ${
               selected === a.id ? 'border-white scale-105 shadow-lg' : 'border-transparent opacity-70'
             }`}

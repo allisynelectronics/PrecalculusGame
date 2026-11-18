@@ -81,6 +81,7 @@ export function ExponentialLogGraphExplorer() {
             <button
               key={fk}
               onClick={() => setFamily(fk)}
+              aria-pressed={family === fk}
               className={`px-4 py-1.5 rounded-full text-sm border ${family === fk ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'}`}
             >
               {fk === 'exp' ? 'Exponential' : 'Logarithmic'}

@@ -29,30 +29,35 @@ export function HUD() {
         <span className="text-xs sm:text-sm">✨ {xp} XP</span>
         <button
           onClick={() => setScreen('worldmap')}
+          aria-current={screen === 'worldmap' ? 'page' : undefined}
           className={`sm:ml-2 px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'worldmap' ? 'bg-purple-500/30' : ''}`}
         >
           🗺️<span className="hidden sm:inline"> Map</span>
         </button>
         <button
           onClick={() => setScreen('dashboard')}
+          aria-current={screen === 'dashboard' ? 'page' : undefined}
           className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'dashboard' ? 'bg-purple-500/30' : ''}`}
         >
           📊<span className="hidden sm:inline"> Dashboard</span>
         </button>
         <button
           onClick={() => setScreen('freepractice')}
+          aria-current={screen === 'freepractice' ? 'page' : undefined}
           className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'freepractice' ? 'bg-purple-500/30' : ''}`}
         >
           🎯<span className="hidden sm:inline"> Practice</span>
         </button>
         <button
           onClick={() => setScreen('examsimulator')}
+          aria-current={screen === 'examsimulator' ? 'page' : undefined}
           className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'examsimulator' ? 'bg-purple-500/30' : ''}`}
         >
           📝<span className="hidden sm:inline"> Exam</span>
         </button>
         <button
           onClick={() => setScreen('compendium')}
+          aria-current={screen === 'compendium' ? 'page' : undefined}
           className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'compendium' ? 'bg-purple-500/30' : ''}`}
         >
           📖<span className="hidden sm:inline"> Book</span>

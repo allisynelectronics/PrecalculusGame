@@ -125,6 +125,7 @@ export function MatrixRowOperationSimulator() {
                 <button
                   key={k}
                   onClick={() => setOpKind(k)}
+                  aria-pressed={opKind === k}
                   className={`px-3 py-1.5 rounded-lg text-xs text-left border ${opKind === k ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'}`}
                 >
                   {k === 'addmultiple' && 'Add a multiple of one row to another'}

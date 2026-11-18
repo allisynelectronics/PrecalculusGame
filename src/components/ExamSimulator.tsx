@@ -200,13 +200,17 @@ export function ExamSimulator() {
               <button
                 key={opt.value}
                 onClick={() => setLength(opt.value)}
+                aria-pressed={length === opt.value}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border text-left ${
                   length === opt.value
                     ? 'bg-amber-500/20 border-amber-400/60 text-amber-200'
                     : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'
                 }`}
               >
-                <span className="font-semibold">{opt.label}</span>
+                {/* A real space (not just visual flex spacing) between these two spans,
+                    so the button's content-derived accessible name reads sensibly
+                    instead of running the two text nodes together with no separator. */}
+                <span className="font-semibold">{opt.label}</span>{' '}
                 <span className="text-xs">{opt.blurb}</span>
               </button>
             ))}
@@ -312,9 +316,12 @@ export function ExamSimulator() {
     <div className="min-h-screen pt-20 pb-10 px-6 flex items-center justify-center bg-gradient-to-b from-[#1a1033] to-[#0b0a14]">
       <div className="max-w-xl w-full">
         <div className="flex items-center justify-between mb-3 text-sm">
-          <span className="text-purple-400">
+          <span className="text-purple-400" role="status" aria-live="polite">
             Question {index + 1} of {topicPlan.length}
           </span>
+          {/* Deliberately not a live region: a per-second countdown would announce every
+              tick, which is disruptive rather than helpful for screen reader users. The
+              remaining time is still visually readable at any point. */}
           <span className={`font-mono font-semibold ${lowOnTime ? 'text-rose-400 animate-pulse' : 'text-purple-200'}`}>
             ⏱ {formatClock(timeLeft)}
           </span>
@@ -349,7 +356,7 @@ export function ExamSimulator() {
           )}
 
           {status !== 'idle' && (
-            <div className="text-center py-4 animate-pop">
+            <div className="text-center py-4 animate-pop" role="status" aria-live="polite">
               <div className="text-3xl mb-1">{status === 'correct' ? '✅' : status === 'incorrect' ? '❌' : '⏭️'}</div>
               <p
                 className={

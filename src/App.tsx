@@ -32,31 +32,44 @@ function App() {
   return (
     <>
       <SaveRecoveryBanner />
+      {/* Lets keyboard users jump past the persistent nav bar (5-6 buttons on every
+          screen) straight to the screen's own content, instead of re-tabbing through
+          the same nav every time. Only visible once focused. */}
+      {screen !== 'title' && (
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:rounded-lg focus:bg-amber-400 focus:text-black focus:font-semibold"
+        >
+          Skip to main content
+        </a>
+      )}
       {screen !== 'title' && <HUD />}
-      {screen === 'title' && <TitleScreen />}
-      {screen === 'character' && <CharacterCreation />}
-      {screen === 'diagnostic' && <Diagnostic />}
-      {screen === 'worldmap' && <WorldMap />}
-      {screen === 'board' && <AdventureBoard />}
-      {screen === 'problem' && <ProblemView />}
-      {screen === 'boss' && <BossBattle />}
-      {screen === 'dashboard' && <Dashboard />}
-      {screen === 'compendium' && <Compendium />}
-      {screen === 'unitcircle' && <UnitCircleExplorer />}
-      {screen === 'trigwave' && <TrigWaveVisualizer />}
-      {screen === 'obliquetriangle' && <ObliqueTriangleSolver />}
-      {screen === 'vectorlab' && <VectorSimulator />}
-      {screen === 'polargrapher' && <PolarGrapher />}
-      {screen === 'rationalgrapher' && <RationalGraphExplorer />}
-      {screen === 'polynomialgrapher' && <PolynomialGraphExplorer />}
-      {screen === 'explographer' && <ExponentialLogGraphExplorer />}
-      {screen === 'conicexplorer' && <ConicSectionExplorer />}
-      {screen === 'trigequation' && <TrigEquationExplorer />}
-      {screen === 'pascalstriangle' && <PascalsTriangleExplorer />}
-      {screen === 'sequenceexplorer' && <SequenceSeriesExplorer />}
-      {screen === 'matrixsimulator' && <MatrixRowOperationSimulator />}
-      {screen === 'freepractice' && <FreePractice />}
-      {screen === 'examsimulator' && <ExamSimulator />}
+      <main id="main-content" tabIndex={-1}>
+        {screen === 'title' && <TitleScreen />}
+        {screen === 'character' && <CharacterCreation />}
+        {screen === 'diagnostic' && <Diagnostic />}
+        {screen === 'worldmap' && <WorldMap />}
+        {screen === 'board' && <AdventureBoard />}
+        {screen === 'problem' && <ProblemView />}
+        {screen === 'boss' && <BossBattle />}
+        {screen === 'dashboard' && <Dashboard />}
+        {screen === 'compendium' && <Compendium />}
+        {screen === 'unitcircle' && <UnitCircleExplorer />}
+        {screen === 'trigwave' && <TrigWaveVisualizer />}
+        {screen === 'obliquetriangle' && <ObliqueTriangleSolver />}
+        {screen === 'vectorlab' && <VectorSimulator />}
+        {screen === 'polargrapher' && <PolarGrapher />}
+        {screen === 'rationalgrapher' && <RationalGraphExplorer />}
+        {screen === 'polynomialgrapher' && <PolynomialGraphExplorer />}
+        {screen === 'explographer' && <ExponentialLogGraphExplorer />}
+        {screen === 'conicexplorer' && <ConicSectionExplorer />}
+        {screen === 'trigequation' && <TrigEquationExplorer />}
+        {screen === 'pascalstriangle' && <PascalsTriangleExplorer />}
+        {screen === 'sequenceexplorer' && <SequenceSeriesExplorer />}
+        {screen === 'matrixsimulator' && <MatrixRowOperationSimulator />}
+        {screen === 'freepractice' && <FreePractice />}
+        {screen === 'examsimulator' && <ExamSimulator />}
+      </main>
     </>
   );
 }

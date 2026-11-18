@@ -196,7 +196,7 @@ export function ProblemView() {
             <AnswerInput key={problem.id} problem={problem} onSubmit={handleSubmit} disabled={showFullSolution} />
 
             {status === 'wrong' && !showFullSolution && (
-              <div className="mt-3 p-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-sm text-rose-200 animate-shake">
+              <div role="status" aria-live="polite" className="mt-3 p-3 rounded-lg bg-rose-500/10 border border-rose-400/30 text-sm text-rose-200 animate-shake">
                 Not quite. <MathText text={problem.hints[Math.min(hintsShown, problem.hints.length - 1)] ?? 'Try breaking the problem into smaller steps.'} />
               </div>
             )}
@@ -293,7 +293,7 @@ export function ProblemView() {
         )}
 
         {status === 'correct' && (
-          <div className="text-center py-4 animate-pop">
+          <div role="status" aria-live="polite" className="text-center py-4 animate-pop">
             <div className="text-4xl mb-2">✅</div>
             <p className="text-emerald-300 font-semibold mb-1">Correct!</p>
             <p className="text-sm text-purple-300 mb-4">

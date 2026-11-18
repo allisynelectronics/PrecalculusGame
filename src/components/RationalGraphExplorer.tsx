@@ -133,6 +133,7 @@ export function RationalGraphExplorer() {
             <button
               key={m}
               onClick={() => setMode(m)}
+              aria-pressed={mode === m}
               className={`px-4 py-1.5 rounded-full text-sm border ${mode === m ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'}`}
             >
               {label}

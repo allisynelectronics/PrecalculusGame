@@ -119,12 +119,14 @@ export function PolarGrapher() {
         <div className="flex gap-2 mb-4">
           <button
             onClick={() => setMode('curve')}
+            aria-pressed={mode === 'curve'}
             className={`px-4 py-1.5 rounded-full text-sm border ${mode === 'curve' ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'}`}
           >
             Plot a Curve
           </button>
           <button
             onClick={() => setMode('point')}
+            aria-pressed={mode === 'point'}
             className={`px-4 py-1.5 rounded-full text-sm border ${mode === 'point' ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'}`}
           >
             Explore a Point

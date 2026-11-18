@@ -151,6 +151,7 @@ export function TrigEquationExplorer() {
                 <button
                   key={fk}
                   onClick={() => setFnKind(fk)}
+                  aria-pressed={fnKind === fk}
                   className={`flex-1 px-3 py-1.5 rounded-full text-sm border ${fnKind === fk ? 'bg-amber-500 text-black border-amber-300' : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'}`}
                 >
                   {fk}(x)
