@@ -20,13 +20,21 @@ const REWARD: Record<SpaceType, { xp: number; coins: number; stars: number }> = 
   boss: { xp: 0, coins: 0, stars: 0 },
 };
 
-function pickProblem(topicId: string, spaceType: SpaceType, masteryLevel: number): Problem {
+function pickProblem(
+  topicId: string,
+  spaceType: SpaceType,
+  masteryLevel: number,
+  explicitDifficulty?: Difficulty | null,
+): Problem {
   if (spaceType === 'training') {
     const repairs = getEquationRepairs().filter((p) => p.topicId === topicId);
     if (repairs.length > 0) return repairs[Math.floor(Math.random() * repairs.length)];
   }
-  let difficulty: Difficulty = masteryLevel <= 2 ? 'beginner' : masteryLevel === 3 ? 'intermediate' : 'advanced';
-  if (spaceType === 'portal' || spaceType === 'knowledge') difficulty = 'advanced';
+  // An explicit difficulty (e.g. chosen in Free Practice) overrides both the
+  // mastery-based auto-pick and the portal/knowledge "always advanced" rule.
+  let difficulty: Difficulty =
+    explicitDifficulty ?? (masteryLevel <= 2 ? 'beginner' : masteryLevel === 3 ? 'intermediate' : 'advanced');
+  if (!explicitDifficulty && (spaceType === 'portal' || spaceType === 'knowledge')) difficulty = 'advanced';
   return getRandomProblem(topicId, [], difficulty) ?? getProblemsByTopic(topicId)[0];
 }
 
@@ -34,6 +42,7 @@ export function ProblemView() {
   const {
     pendingTopicId,
     pendingSpaceType,
+    pendingDifficulty,
     returnScreen,
     mastery,
     seenTopics,
@@ -52,7 +61,7 @@ export function ProblemView() {
 
   const [stage, setStage] = useState<'discover' | 'solve'>(isFirstEncounter ? 'discover' : 'solve');
   const [problem] = useState<Problem>(() =>
-    pickProblem(topicId, spaceType, mastery[topicId]?.level ?? 1),
+    pickProblem(topicId, spaceType, mastery[topicId]?.level ?? 1, pendingDifficulty),
   );
   const [status, setStatus] = useState<'idle' | 'wrong' | 'correct'>('idle');
   const [attemptCount, setAttemptCount] = useState(0);

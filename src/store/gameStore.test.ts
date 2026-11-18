@@ -293,6 +293,36 @@ describe('startProblem / clearProblem', () => {
     expect(s.pendingTopicId).toBeNull();
     expect(s.activeProblemId).toBeNull();
     expect(s.pendingSpaceType).toBeNull();
+    expect(s.pendingDifficulty).toBeNull();
+  });
+
+  it('startProblem stores an explicit difficulty override when given one', () => {
+    useGameStore.getState().startProblem('order-of-operations', 'freepractice', undefined, 'advanced');
+    expect(useGameStore.getState().pendingDifficulty).toBe('advanced');
+  });
+
+  it('startProblem defaults pendingDifficulty to null when omitted', () => {
+    useGameStore.getState().startProblem('order-of-operations', 'freepractice');
+    expect(useGameStore.getState().pendingDifficulty).toBeNull();
+  });
+});
+
+describe('practiceDifficulty preference', () => {
+  it('defaults to "auto"', () => {
+    expect(useGameStore.getState().practiceDifficulty).toBe('auto');
+  });
+
+  it('setPracticeDifficulty persists the chosen preference', () => {
+    useGameStore.getState().setPracticeDifficulty('beginner');
+    expect(useGameStore.getState().practiceDifficulty).toBe('beginner');
+    useGameStore.getState().setPracticeDifficulty('auto');
+    expect(useGameStore.getState().practiceDifficulty).toBe('auto');
+  });
+
+  it('resetGame resets practiceDifficulty back to "auto"', () => {
+    useGameStore.getState().setPracticeDifficulty('advanced');
+    useGameStore.getState().resetGame();
+    expect(useGameStore.getState().practiceDifficulty).toBe('auto');
   });
 });
 

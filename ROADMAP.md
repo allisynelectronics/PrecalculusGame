@@ -32,6 +32,11 @@ item ships or a new one is identified; don't let it drift out of sync with reali
   most-overdue first, and — per the original brief's "routes students to missing
   prerequisites automatically" — flags when a due topic's prerequisite is itself weak
   or unattempted, with a one-click shortcut to review that first.
+- Added **difficulty selection in Free Practice**: a persisted Auto/Beginner/
+  Intermediate/Advanced picker that overrides the mastery-based auto-pick (and the
+  portal/knowledge "always advanced" rule) for every problem practiced until changed,
+  so a player can deliberately push into harder material instead of waiting for the
+  mastery algorithm to offer it.
 
 ## Next up — ranked by learning impact
 
@@ -39,17 +44,13 @@ item ships or a new one is identified; don't let it drift out of sync with reali
    test conditions — useful specifically because Free Practice and board play both
    allow infinite retries and hints, which is good for *learning* but doesn't build
    the test-taking calibration (pacing, no safety net) a retake actually needs.
-2. **Difficulty selection in Free Practice.** Right now Free Practice auto-picks
-   difficulty from the player's current mastery level, same as board play. Letting the
-   player explicitly choose beginner/intermediate/advanced would let them deliberately
-   push into harder material instead of waiting for the mastery algorithm to offer it.
-3. **Study-habit visibility.** A visible daily/weekly practice streak and a "topics
+2. **Study-habit visibility.** A visible daily/weekly practice streak and a "topics
    mastered this week" trend on the Dashboard. Self-monitoring is a well-established
    lever for maintaining a study habit, especially over a semester-long retake.
-4. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
+3. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
    real screen reader (NVDA/JAWS/VoiceOver) or keyboard-only navigation pass. Automated
    tools catch a real but partial subset of issues.
-5. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
+4. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
    reasonable first cut, not tuned against real usage data. Worth revisiting once there's
    enough attempt history to see whether topics are being resurfaced too early/late in
    practice. The "due" list is also currently capped at 8 topics with no way to see more

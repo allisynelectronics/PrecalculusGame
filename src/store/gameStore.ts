@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { PersistStorage, StorageValue } from 'zustand/middleware';
 import { persist } from 'zustand/middleware';
-import type { AttemptRecord, Character, MasteryLevel, Screen, SpaceType } from '../types';
+import type { AttemptRecord, Character, Difficulty, MasteryLevel, Screen, SpaceType } from '../types';
 
 const SAVE_KEY = 'mathverse-save';
 const SCHEMA_VERSION = 1;
@@ -34,9 +34,11 @@ interface GameState {
   activeSpaceIndex: number | null;
   pendingTopicId: string | null; // topic queued for the problem screen
   pendingSpaceType: SpaceType | null;
+  pendingDifficulty: Difficulty | null; // explicit difficulty override for the queued problem, if any
   returnScreen: Screen; // where to go back to after a problem/lesson
   lastReward: { xp: number; coins: number; stars: number } | null;
   lastPracticeTopicId: string | null; // last topic opened from Free Practice, for "practice again"
+  practiceDifficulty: Difficulty | 'auto'; // Free Practice's persisted difficulty preference
 
   setScreen: (s: Screen) => void;
   setCharacter: (c: Character) => void;
@@ -45,8 +47,9 @@ interface GameState {
   markTopicSeen: (topicId: string) => void;
   recordAttempt: (a: AttemptRecord) => void;
   grantReward: (xp: number, coins: number, stars: number) => void;
-  startProblem: (topicId: string, returnScreen: Screen, spaceType?: SpaceType) => void;
+  startProblem: (topicId: string, returnScreen: Screen, spaceType?: SpaceType, difficulty?: Difficulty) => void;
   clearProblem: () => void;
+  setPracticeDifficulty: (d: Difficulty | 'auto') => void;
   completeDiagnostic: (results: Record<string, boolean>) => void;
   defeatBoss: (bossId: string, worldId: string) => void;
   resetGame: () => void;
@@ -77,7 +80,7 @@ type PersistedFields = Omit<
 
 const ACTION_KEYS = [
   'setScreen', 'setCharacter', 'enterWorld', 'movePlayer', 'markTopicSeen',
-  'recordAttempt', 'grantReward', 'startProblem', 'clearProblem',
+  'recordAttempt', 'grantReward', 'startProblem', 'clearProblem', 'setPracticeDifficulty',
   'completeDiagnostic', 'defeatBoss', 'resetGame', 'exportSave', 'importSave',
 ] as const satisfies readonly (keyof GameState)[];
 
@@ -230,9 +233,11 @@ export const useGameStore = create<GameState>()(
       activeSpaceIndex: null,
       pendingTopicId: null,
       pendingSpaceType: null,
+      pendingDifficulty: null,
       returnScreen: 'board',
       lastReward: null,
       lastPracticeTopicId: null,
+      practiceDifficulty: 'auto',
 
       setScreen: (s) => set({ screen: s }),
       setCharacter: (c) => set({ character: c }),
@@ -276,16 +281,19 @@ export const useGameStore = create<GameState>()(
           };
         }),
 
-      startProblem: (topicId, returnScreen, spaceType) =>
+      startProblem: (topicId, returnScreen, spaceType, difficulty) =>
         set({
           pendingTopicId: topicId,
           screen: 'problem',
           returnScreen,
           pendingSpaceType: spaceType ?? 'challenge',
+          pendingDifficulty: difficulty ?? null,
           ...(returnScreen === 'freepractice' ? { lastPracticeTopicId: topicId } : {}),
         }),
 
-      clearProblem: () => set({ pendingTopicId: null, activeProblemId: null, pendingSpaceType: null }),
+      clearProblem: () => set({ pendingTopicId: null, activeProblemId: null, pendingSpaceType: null, pendingDifficulty: null }),
+
+      setPracticeDifficulty: (d) => set({ practiceDifficulty: d }),
 
       completeDiagnostic: (results) =>
         set((state) => {
@@ -326,9 +334,11 @@ export const useGameStore = create<GameState>()(
           activeSpaceIndex: null,
           pendingTopicId: null,
           pendingSpaceType: null,
+          pendingDifficulty: null,
           returnScreen: 'board',
           lastReward: null,
           lastPracticeTopicId: null,
+          practiceDifficulty: 'auto',
         }),
 
       exportSave: () => JSON.stringify({ state: stripActions(get() as GameState), version: SCHEMA_VERSION }, null, 2),

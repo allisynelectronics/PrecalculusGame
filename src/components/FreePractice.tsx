@@ -2,9 +2,16 @@ import { useState } from 'react';
 import { getTopic, TOPICS } from '../data/topics';
 import { WORLDS } from '../data/worlds';
 import { useGameStore } from '../store/gameStore';
-import { MASTERY_NAMES } from '../types';
+import { MASTERY_NAMES, type Difficulty } from '../types';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+const DIFFICULTY_OPTIONS: Array<{ value: Difficulty | 'auto'; label: string }> = [
+  { value: 'auto', label: 'Auto' },
+  { value: 'beginner', label: 'Beginner' },
+  { value: 'intermediate', label: 'Intermediate' },
+  { value: 'advanced', label: 'Advanced' },
+];
 
 function formatDue(nextReviewAt: number | null | undefined, now: number): string {
   if (!nextReviewAt) return 'Due now'; // null/undefined — e.g. mastery saved before this field existed
@@ -15,7 +22,8 @@ function formatDue(nextReviewAt: number | null | undefined, now: number): string
 }
 
 export function FreePractice() {
-  const { mastery, lastPracticeTopicId, startProblem, setScreen } = useGameStore();
+  const { mastery, lastPracticeTopicId, startProblem, setScreen, practiceDifficulty, setPracticeDifficulty } =
+    useGameStore();
 
   const lastTopic = lastPracticeTopicId ? getTopic(lastPracticeTopicId) : undefined;
   const lastWorld = lastTopic ? WORLDS.find((w) => w.id === lastTopic.worldId) : undefined;
@@ -40,7 +48,8 @@ export function FreePractice() {
   const selectedWorld = WORLDS.find((w) => w.id === selectedWorldId);
   const worldTopics = selectedWorldId ? TOPICS.filter((t) => t.worldId === selectedWorldId) : [];
 
-  const practice = (topicId: string) => startProblem(topicId, 'freepractice');
+  const practice = (topicId: string) =>
+    startProblem(topicId, 'freepractice', undefined, practiceDifficulty === 'auto' ? undefined : practiceDifficulty);
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-6 bg-gradient-to-b from-[#0b0a14] to-[#1a1033]">
@@ -54,9 +63,33 @@ export function FreePractice() {
             ← Back to Map
           </button>
         </div>
-        <p className="text-purple-300 mb-6">
+        <p className="text-purple-300 mb-4">
           Pick any topic from any world and practice it directly — no dice required. Progress and rewards still count.
         </p>
+
+        <div className="mb-6">
+          <p className="text-xs text-purple-400 uppercase mb-1.5">Difficulty</p>
+          <div className="flex flex-wrap gap-2">
+            {DIFFICULTY_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setPracticeDifficulty(opt.value)}
+                className={`px-3 py-1.5 rounded-full border text-sm ${
+                  practiceDifficulty === opt.value
+                    ? 'bg-amber-500/30 border-amber-400/60 text-amber-200'
+                    : 'border-purple-400/40 text-purple-200 hover:bg-purple-500/20'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          {practiceDifficulty !== 'auto' && (
+            <p className="text-purple-500 text-xs mt-1.5">
+              Overrides your mastery level — every problem you practice will be {practiceDifficulty} until you change this.
+            </p>
+          )}
+        </div>
 
         {lastTopic && (
           <div className="bg-black/40 border border-amber-400/30 rounded-2xl p-4 mb-6 flex items-center justify-between gap-3">
