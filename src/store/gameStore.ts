@@ -13,6 +13,9 @@ export interface TopicMastery {
   correct: number;
   lastReviewedAt: number | null; // ms epoch of the most recent attempt (correct or not)
   nextReviewAt: number | null; // ms epoch this topic is next due for spaced-repetition review
+  masteredAt: number | null; // ms epoch the level FIRST reached "Proficient" (4) or higher;
+  // set once and kept even if the level later decays, so it marks when proficiency was
+  // first demonstrated rather than tracking the current level
 }
 
 interface GameState {
@@ -193,7 +196,9 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const REVIEW_INTERVAL_DAYS: Record<MasteryLevel, number> = { 1: 0, 2: 1, 3: 3, 4: 7, 5: 14 };
 
 function updateMastery(m: TopicMastery | undefined, correct: boolean): TopicMastery {
-  const base: TopicMastery = m ?? { level: 1, correctStreak: 0, attempts: 0, correct: 0, lastReviewedAt: null, nextReviewAt: null };
+  const base: TopicMastery = m ?? {
+    level: 1, correctStreak: 0, attempts: 0, correct: 0, lastReviewedAt: null, nextReviewAt: null, masteredAt: null,
+  };
   const attempts = base.attempts + 1;
   const correctCount = base.correct + (correct ? 1 : 0);
   const correctStreak = correct ? base.correctStreak + 1 : 0;
@@ -211,7 +216,11 @@ function updateMastery(m: TopicMastery | undefined, correct: boolean): TopicMast
   // answer schedules review immediately — a miss means this needs reinforcement now,
   // not on the usual schedule.
   const nextReviewAt = correct ? now + REVIEW_INTERVAL_DAYS[level] * MS_PER_DAY : now;
-  return { level, correctStreak, attempts, correct: correctCount, lastReviewedAt: now, nextReviewAt };
+  // Records the first time this topic reaches "Proficient" (4) or higher, for the
+  // Dashboard's "topics mastered this week" trend — kept even if the level later dips
+  // back down, since it marks when proficiency was first demonstrated.
+  const masteredAt = base.masteredAt ?? (level >= 4 ? now : null);
+  return { level, correctStreak, attempts, correct: correctCount, lastReviewedAt: now, nextReviewAt, masteredAt };
 }
 
 export const useGameStore = create<GameState>()(
@@ -383,4 +392,58 @@ export function getOverallAccuracy(attempts: AttemptRecord[]): { independent: nu
   const pct = (arr: AttemptRecord[]) =>
     arr.length === 0 ? 0 : Math.round((arr.filter((a) => a.correct).length / arr.length) * 100);
   return { independent: pct(noHint), withHint: pct(withHint) };
+}
+
+function dayKey(ts: number): string {
+  const d = new Date(ts);
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function startOfDay(ts: number): Date {
+  const d = new Date(ts);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/** Current daily practice streak, counting consecutive calendar days (ending today or
+ *  yesterday — a streak isn't broken just because today isn't over yet) with at least
+ *  one attempt. Note: `attempts` is capped to the most recent 200 records, so a streak
+ *  longer than that many days of practice could undercount — not a concern at normal
+ *  practice volume. */
+export function getStudyStreak(
+  attempts: AttemptRecord[],
+  now: number = Date.now(),
+): { currentStreakDays: number; practicedToday: boolean } {
+  if (attempts.length === 0) return { currentStreakDays: 0, practicedToday: false };
+  const days = new Set(attempts.map((a) => dayKey(a.timestamp)));
+  const practicedToday = days.has(dayKey(now));
+  const cursor = startOfDay(now);
+  if (!practicedToday) {
+    cursor.setDate(cursor.getDate() - 1);
+    if (!days.has(dayKey(cursor.getTime()))) return { currentStreakDays: 0, practicedToday: false };
+  }
+  let streak = 0;
+  while (days.has(dayKey(cursor.getTime()))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return { currentStreakDays: streak, practicedToday };
+}
+
+/** How many of the last 7 calendar days (today included) had at least one attempt. */
+export function getDaysPracticedThisWeek(attempts: AttemptRecord[], now: number = Date.now()): number {
+  const days = new Set(attempts.map((a) => dayKey(a.timestamp)));
+  const cursor = startOfDay(now);
+  let count = 0;
+  for (let i = 0; i < 7; i++) {
+    if (days.has(dayKey(cursor.getTime()))) count += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return count;
+}
+
+/** How many topics first reached "Proficient" mastery or higher within the last 7 days. */
+export function getTopicsMasteredThisWeek(mastery: Record<string, TopicMastery>, now: number = Date.now()): number {
+  const weekAgo = now - 7 * MS_PER_DAY;
+  return Object.values(mastery).filter((m) => m.masteredAt !== null && m.masteredAt >= weekAgo).length;
 }

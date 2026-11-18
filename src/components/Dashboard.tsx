@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { BOSSES } from '../data/bosses';
 import { TOPICS } from '../data/topics';
 import { WORLDS } from '../data/worlds';
-import { getOverallAccuracy, useGameStore } from '../store/gameStore';
+import { getDaysPracticedThisWeek, getOverallAccuracy, getStudyStreak, getTopicsMasteredThisWeek, useGameStore } from '../store/gameStore';
 import { MASTERY_NAMES } from '../types';
 
 const MASTERY_COLOR: Record<number, string> = {
@@ -19,6 +19,11 @@ export function Dashboard() {
   const { independent, withHint } = getOverallAccuracy(attempts);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importMessage, setImportMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null);
+  // Snapshot "now" once per mount rather than calling Date.now() during render.
+  const [now] = useState(() => Date.now());
+  const streak = getStudyStreak(attempts, now);
+  const daysThisWeek = getDaysPracticedThisWeek(attempts, now);
+  const masteredThisWeek = getTopicsMasteredThisWeek(mastery, now);
 
   const activeWorlds = WORLDS.filter((w) => !w.locked && unlockedWorldIds.includes(w.id));
   const allActiveTopics = TOPICS.filter((t) => activeWorlds.some((w) => w.id === t.worldId));
@@ -100,6 +105,23 @@ export function Dashboard() {
           <StatCard label="Independent Accuracy" value={`${independent}%`} />
           <StatCard label="Accuracy w/ Hints" value={`${withHint}%`} />
           <StatCard label="Calculus Readiness" value={`${calculusReadiness}%`} />
+        </div>
+
+        <div className="bg-black/40 border border-amber-400/30 rounded-2xl p-5 mb-6">
+          <h2 className="font-display text-lg text-amber-200 mb-3">🔥 Study Habits</h2>
+          <div className="grid grid-cols-3 gap-3">
+            <StatCard label="Current Streak" value={`${streak.currentStreakDays}d`} icon="🔥" />
+            <StatCard label="Days This Week" value={`${daysThisWeek}/7`} icon="📅" />
+            <StatCard label="Mastered This Week" value={masteredThisWeek} icon="📈" />
+          </div>
+          {streak.currentStreakDays > 0 && !streak.practicedToday && (
+            <p className="text-xs text-amber-300 mt-3 text-center">
+              Practice today to keep your {streak.currentStreakDays}-day streak alive!
+            </p>
+          )}
+          {streak.currentStreakDays === 0 && (
+            <p className="text-xs text-purple-400 mt-3 text-center">Solve a problem today to start a streak.</p>
+          )}
         </div>
 
         {activeWorlds.map((world) => {

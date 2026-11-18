@@ -248,6 +248,40 @@ describe('spaced-repetition scheduling (recordAttempt)', () => {
   });
 });
 
+describe('TopicMastery.masteredAt', () => {
+  const attempt = (topicId: string, correct: boolean) =>
+    useGameStore.getState().recordAttempt({ problemId: 'p', topicId, correct, usedHint: false, timestamp: 0 });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('is set the first time a topic reaches level 4 ("Proficient")', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1000);
+    for (let i = 0; i < 4; i++) attempt('t', true); // streak 4 -> level 4
+    expect(useGameStore.getState().mastery.t.level).toBe(4);
+    expect(useGameStore.getState().mastery.t.masteredAt).toBe(1000);
+  });
+
+  it('stays null below level 4', () => {
+    attempt('t', true); // level 2
+    attempt('t', true); // level 3
+    expect(useGameStore.getState().mastery.t.level).toBe(3);
+    expect(useGameStore.getState().mastery.t.masteredAt).toBeNull();
+  });
+
+  it('is kept at its original timestamp even if the level later decays below 4', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1000);
+    for (let i = 0; i < 4; i++) attempt('t', true); // level 4, masteredAt = 1000
+    vi.setSystemTime(2000);
+    attempt('t', false); // decays to level 3
+    expect(useGameStore.getState().mastery.t.level).toBe(3);
+    expect(useGameStore.getState().mastery.t.masteredAt).toBe(1000); // unchanged
+  });
+});
+
 describe('recordExamResult', () => {
   it('stores the score and a timestamp', () => {
     vi.useFakeTimers();
@@ -364,6 +398,94 @@ describe('getOverallAccuracy', () => {
   it('returns 0% (not NaN) for an empty attempt history', async () => {
     const { getOverallAccuracy } = await import('./gameStore');
     expect(getOverallAccuracy([])).toEqual({ independent: 0, withHint: 0 });
+  });
+});
+
+describe('getStudyStreak', () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const mkAttempt = (timestamp: number) => ({ problemId: 'p', topicId: 't', correct: true, usedHint: false, timestamp });
+
+  it('returns 0 and practicedToday false with no attempts', async () => {
+    const { getStudyStreak } = await import('./gameStore');
+    expect(getStudyStreak([], 10_000)).toEqual({ currentStreakDays: 0, practicedToday: false });
+  });
+
+  it('counts a single day practiced today as a 1-day streak', async () => {
+    const { getStudyStreak } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12); // Jan 15, noon UTC
+    expect(getStudyStreak([mkAttempt(now)], now)).toEqual({ currentStreakDays: 1, practicedToday: true });
+  });
+
+  it('counts consecutive days ending today', async () => {
+    const { getStudyStreak } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12);
+    const attempts = [mkAttempt(now), mkAttempt(now - DAY_MS), mkAttempt(now - 2 * DAY_MS)];
+    expect(getStudyStreak(attempts, now)).toEqual({ currentStreakDays: 3, practicedToday: true });
+  });
+
+  it('is not broken if today has no attempt yet but yesterday did', async () => {
+    const { getStudyStreak } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12);
+    const attempts = [mkAttempt(now - DAY_MS), mkAttempt(now - 2 * DAY_MS)];
+    expect(getStudyStreak(attempts, now)).toEqual({ currentStreakDays: 2, practicedToday: false });
+  });
+
+  it('is broken (0) if the most recent attempt was more than a day ago', async () => {
+    const { getStudyStreak } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12);
+    const attempts = [mkAttempt(now - 3 * DAY_MS)];
+    expect(getStudyStreak(attempts, now)).toEqual({ currentStreakDays: 0, practicedToday: false });
+  });
+
+  it('stops counting at the first gap', async () => {
+    const { getStudyStreak } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12);
+    // today and yesterday practiced, but the day before that is missing.
+    const attempts = [mkAttempt(now), mkAttempt(now - DAY_MS), mkAttempt(now - 3 * DAY_MS)];
+    expect(getStudyStreak(attempts, now)).toEqual({ currentStreakDays: 2, practicedToday: true });
+  });
+});
+
+describe('getDaysPracticedThisWeek', () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const mkAttempt = (timestamp: number) => ({ problemId: 'p', topicId: 't', correct: true, usedHint: false, timestamp });
+
+  it('counts distinct days within the last 7, today included', async () => {
+    const { getDaysPracticedThisWeek } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12);
+    const attempts = [mkAttempt(now), mkAttempt(now - DAY_MS), mkAttempt(now - 6 * DAY_MS)];
+    expect(getDaysPracticedThisWeek(attempts, now)).toBe(3);
+  });
+
+  it('ignores attempts from more than 7 days ago', async () => {
+    const { getDaysPracticedThisWeek } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12);
+    expect(getDaysPracticedThisWeek([mkAttempt(now - 8 * DAY_MS)], now)).toBe(0);
+  });
+
+  it('multiple attempts on the same day only count once', async () => {
+    const { getDaysPracticedThisWeek } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15, 12);
+    expect(getDaysPracticedThisWeek([mkAttempt(now), mkAttempt(now - 1000)], now)).toBe(1);
+  });
+});
+
+describe('getTopicsMasteredThisWeek', () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const mastery = (masteredAt: number | null) => ({
+    level: 4 as const, correctStreak: 4, attempts: 4, correct: 4, lastReviewedAt: 0, nextReviewAt: 0, masteredAt,
+  });
+
+  it('counts topics whose masteredAt falls within the last 7 days', async () => {
+    const { getTopicsMasteredThisWeek } = await import('./gameStore');
+    const now = Date.UTC(2026, 0, 15);
+    const m = { a: mastery(now - DAY_MS), b: mastery(now - 10 * DAY_MS), c: mastery(null) };
+    expect(getTopicsMasteredThisWeek(m, now)).toBe(1);
+  });
+
+  it('returns 0 when nothing has been mastered', async () => {
+    const { getTopicsMasteredThisWeek } = await import('./gameStore');
+    expect(getTopicsMasteredThisWeek({}, Date.now())).toBe(0);
   });
 });
 

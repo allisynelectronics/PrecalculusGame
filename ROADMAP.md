@@ -49,16 +49,20 @@ item ships or a new one is identified; don't let it drift out of sync with reali
   (identityProof problems are excluded from the exam pool — their multi-stage,
   hint-embedded UI doesn't fit a single-attempt, no-hints format; this is the same
   `excludeIdentityProof` option already used for boss fights.)
+- Added **study-habit visibility** to the Dashboard: a 🔥 Study Habits section showing
+  the current daily practice streak (counts consecutive days with at least one
+  attempt; not broken just because today isn't over yet — it's still "alive" if
+  yesterday was practiced), days practiced in the last 7, and topics that first
+  reached "Proficient" mastery or higher in the last 7 days. `TopicMastery` gained a
+  `masteredAt` timestamp (set once, kept even if the level later decays) to make the
+  "mastered this week" trend possible without replaying attempt history.
 
 ## Next up — ranked by learning impact
 
-1. **Study-habit visibility.** A visible daily/weekly practice streak and a "topics
-   mastered this week" trend on the Dashboard. Self-monitoring is a well-established
-   lever for maintaining a study habit, especially over a semester-long retake.
-2. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
+1. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
    real screen reader (NVDA/JAWS/VoiceOver) or keyboard-only navigation pass. Automated
    tools catch a real but partial subset of issues.
-3. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
+2. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
    reasonable first cut, not tuned against real usage data. Worth revisiting once there's
    enough attempt history to see whether topics are being resurfaced too early/late in
    practice. The "due" list is also currently capped at 8 topics with no way to see more
@@ -93,3 +97,7 @@ item ships or a new one is identified; don't let it drift out of sync with reali
 - No mobile-specific QA pass beyond the one HUD fix made in passing while testing Free
   Practice — layout hasn't been systematically checked at phone width across every
   screen.
+- The Dashboard's study streak and "days this week" stats are computed from `attempts`,
+  which is capped to the most recent 200 records. At normal practice volume this is a
+  non-issue, but an extremely heavy practice day (200+ problems) could push older days
+  out of the window and undercount a longer streak.
