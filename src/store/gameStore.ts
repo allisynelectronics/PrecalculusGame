@@ -39,6 +39,7 @@ interface GameState {
   lastReward: { xp: number; coins: number; stars: number } | null;
   lastPracticeTopicId: string | null; // last topic opened from Free Practice, for "practice again"
   practiceDifficulty: Difficulty | 'auto'; // Free Practice's persisted difficulty preference
+  lastExamResult: { correct: number; total: number; timestamp: number } | null;
 
   setScreen: (s: Screen) => void;
   setCharacter: (c: Character) => void;
@@ -50,6 +51,7 @@ interface GameState {
   startProblem: (topicId: string, returnScreen: Screen, spaceType?: SpaceType, difficulty?: Difficulty) => void;
   clearProblem: () => void;
   setPracticeDifficulty: (d: Difficulty | 'auto') => void;
+  recordExamResult: (correct: number, total: number) => void;
   completeDiagnostic: (results: Record<string, boolean>) => void;
   defeatBoss: (bossId: string, worldId: string) => void;
   resetGame: () => void;
@@ -81,7 +83,7 @@ type PersistedFields = Omit<
 const ACTION_KEYS = [
   'setScreen', 'setCharacter', 'enterWorld', 'movePlayer', 'markTopicSeen',
   'recordAttempt', 'grantReward', 'startProblem', 'clearProblem', 'setPracticeDifficulty',
-  'completeDiagnostic', 'defeatBoss', 'resetGame', 'exportSave', 'importSave',
+  'recordExamResult', 'completeDiagnostic', 'defeatBoss', 'resetGame', 'exportSave', 'importSave',
 ] as const satisfies readonly (keyof GameState)[];
 
 /** Strips the store's action functions, leaving only the persistable data fields. */
@@ -238,6 +240,7 @@ export const useGameStore = create<GameState>()(
       lastReward: null,
       lastPracticeTopicId: null,
       practiceDifficulty: 'auto',
+      lastExamResult: null,
 
       setScreen: (s) => set({ screen: s }),
       setCharacter: (c) => set({ character: c }),
@@ -295,6 +298,8 @@ export const useGameStore = create<GameState>()(
 
       setPracticeDifficulty: (d) => set({ practiceDifficulty: d }),
 
+      recordExamResult: (correct, total) => set({ lastExamResult: { correct, total, timestamp: Date.now() } }),
+
       completeDiagnostic: (results) =>
         set((state) => {
           const mastery = { ...state.mastery };
@@ -339,6 +344,7 @@ export const useGameStore = create<GameState>()(
           lastReward: null,
           lastPracticeTopicId: null,
           practiceDifficulty: 'auto',
+          lastExamResult: null,
         }),
 
       exportSave: () => JSON.stringify({ state: stripActions(get() as GameState), version: SCHEMA_VERSION }, null, 2),

@@ -164,4 +164,10 @@ test.describe('accessibility (axe-core, WCAG 2.2 AA tags)', () => {
     const results = await runAxe(page);
     expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
   });
+
+  test('exam simulator (setup screen)', async ({ page }) => {
+    await gotoScreen(page, 'examsimulator');
+    const results = await runAxe(page);
+    expect(results.violations, JSON.stringify(results.violations, null, 2)).toEqual([]);
+  });
 });

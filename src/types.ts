@@ -144,7 +144,8 @@ export type Screen =
   | 'pascalstriangle'
   | 'sequenceexplorer'
   | 'matrixsimulator'
-  | 'freepractice';
+  | 'freepractice'
+  | 'examsimulator';
 
 export interface AttemptRecord {
   problemId: string;

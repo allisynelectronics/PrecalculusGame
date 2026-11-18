@@ -46,6 +46,12 @@ export function HUD() {
           🎯<span className="hidden sm:inline"> Practice</span>
         </button>
         <button
+          onClick={() => setScreen('examsimulator')}
+          className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'examsimulator' ? 'bg-purple-500/30' : ''}`}
+        >
+          📝<span className="hidden sm:inline"> Exam</span>
+        </button>
+        <button
           onClick={() => setScreen('compendium')}
           className={`px-2 py-1 rounded border border-purple-400/40 hover:bg-purple-500/20 ${screen === 'compendium' ? 'bg-purple-500/30' : ''}`}
         >

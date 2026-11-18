@@ -37,20 +37,28 @@ item ships or a new one is identified; don't let it drift out of sync with reali
   portal/knowledge "always advanced" rule) for every problem practiced until changed,
   so a player can deliberately push into harder material instead of waiting for the
   mastery algorithm to offer it.
+- Added the **Exam Simulator**: a timed (90s/question), mixed-topic assessment mode
+  with no hints and one answer per question — Quick (10q/15min), Standard (20q/30min),
+  or Full (30q/45min) length, drawing topics only from unlocked worlds, difficulty
+  per-topic from current mastery. A skip option and an "End Exam Early" option both
+  end realistically (unanswered/skipped count against the score, not just wrong
+  answers), and the results screen breaks down correct/incorrect/skipped/unanswered
+  plus a per-topic score table so a student can see exactly what to review next. Each
+  question still updates mastery/spaced-repetition like any other attempt; the last
+  exam's score is shown on the setup screen as a point of reference for the next one.
+  (identityProof problems are excluded from the exam pool — their multi-stage,
+  hint-embedded UI doesn't fit a single-attempt, no-hints format; this is the same
+  `excludeIdentityProof` option already used for boss fights.)
 
 ## Next up — ranked by learning impact
 
-1. **Exam Simulator.** A timed, mixed-topic, no-hints assessment mode that mimics real
-   test conditions — useful specifically because Free Practice and board play both
-   allow infinite retries and hints, which is good for *learning* but doesn't build
-   the test-taking calibration (pacing, no safety net) a retake actually needs.
-2. **Study-habit visibility.** A visible daily/weekly practice streak and a "topics
+1. **Study-habit visibility.** A visible daily/weekly practice streak and a "topics
    mastered this week" trend on the Dashboard. Self-monitoring is a well-established
    lever for maintaining a study habit, especially over a semester-long retake.
-3. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
+2. **Manual accessibility pass.** Only axe-core (automated) has been run so far — no
    real screen reader (NVDA/JAWS/VoiceOver) or keyboard-only navigation pass. Automated
    tools catch a real but partial subset of issues.
-4. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
+3. **Weakness Workshop refinements.** The review-interval schedule (1/3/7/14 days) is a
    reasonable first cut, not tuned against real usage data. Worth revisiting once there's
    enough attempt history to see whether topics are being resurfaced too early/late in
    practice. The "due" list is also currently capped at 8 topics with no way to see more

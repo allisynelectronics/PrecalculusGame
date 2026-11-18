@@ -248,6 +248,26 @@ describe('spaced-repetition scheduling (recordAttempt)', () => {
   });
 });
 
+describe('recordExamResult', () => {
+  it('stores the score and a timestamp', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(12345);
+    useGameStore.getState().recordExamResult(7, 10);
+    expect(useGameStore.getState().lastExamResult).toEqual({ correct: 7, total: 10, timestamp: 12345 });
+    vi.useRealTimers();
+  });
+
+  it('defaults to null until an exam has been taken', () => {
+    expect(useGameStore.getState().lastExamResult).toBeNull();
+  });
+
+  it('resetGame clears the last exam result', () => {
+    useGameStore.getState().recordExamResult(5, 10);
+    useGameStore.getState().resetGame();
+    expect(useGameStore.getState().lastExamResult).toBeNull();
+  });
+});
+
 describe('completeDiagnostic', () => {
   it('seeds mastery for every topic result and moves to the world map', () => {
     useGameStore.getState().completeDiagnostic({ a: true, b: false });

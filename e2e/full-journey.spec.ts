@@ -110,6 +110,42 @@ test.describe('full player journey', () => {
     await expect(page.getByText('Practice again')).toBeVisible();
   });
 
+  test('exam simulator: start a quick exam, answer one question, end early, see results', async ({ page }) => {
+    await createCharacterAndReachWorldMap(page);
+    await page.getByText('📝 Exam').click();
+    await expect(page.getByRole('heading', { name: /Exam Simulator/ })).toBeVisible();
+
+    await page.getByRole('button', { name: /Quick/ }).click();
+    await page.getByRole('button', { name: 'Start Exam' }).click();
+
+    await expect(page.getByText('Question 1 of 10')).toBeVisible();
+
+    const tex = ((await page.locator('.text-lg.text-purple-100 annotation').first().textContent()) ?? '').trim();
+    const problem = ALL_PROBLEMS.find((p) => p.prompt.includes(tex));
+    expect(problem, `could not identify rendered problem from TeX source: "${tex}"`).toBeTruthy();
+
+    // Exam problems are never identityProof (excluded by design) or multiple choice in
+    // this particular random draw path — but guard for a text input regardless.
+    const textInput = page.getByPlaceholder(/e\.g\./);
+    if (await textInput.isVisible().catch(() => false)) {
+      await textInput.fill(problem!.answer);
+      await page.getByRole('button', { name: 'Submit' }).click();
+    } else {
+      // multipleChoice or equationRepair — just skip this one, the exam flow itself is
+      // what's under test here, not every answer-type's grading (already covered
+      // elsewhere).
+      await page.getByRole('button', { name: /Skip/ }).click();
+    }
+
+    // Advances to question 2 after the brief feedback flash.
+    await expect(page.getByText('Question 2 of 10')).toBeVisible({ timeout: 3000 });
+
+    await page.getByRole('button', { name: /End Exam Early/ }).click();
+    await expect(page.locator('h1')).toContainText('/10');
+    await expect(page.getByRole('button', { name: 'Back to Map' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Retake' })).toBeVisible();
+  });
+
   test('compendium opens and the A-Z rail scrolls to a letter', async ({ page }) => {
     await createCharacterAndReachWorldMap(page);
     await page.getByText('📖 Book').click();
